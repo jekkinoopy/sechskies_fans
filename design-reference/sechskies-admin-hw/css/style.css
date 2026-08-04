@@ -1,0 +1,391 @@
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@100..900&display=swap');
+
+/* ============================================
+   水晶練習室｜偶像練習生訓練管理系統
+   主題：專輯質感 — 黑底 + 銀白金屬漸層（呼應 G1 專輯視覺），
+   重點行動區保留少量烈焰紅點綴
+   ============================================ */
+
+:root {
+  /* ── 環境色（銀白金屬，用於底色／邊框／卡片） ── */
+  --sk-primary: #9aa0a8;
+  --sk-primary-dark: #4b4e54;
+  --sk-secondary: #e4e6ea;
+  --sk-accent: #ffffff;
+  --sk-gradient: linear-gradient(135deg, #3a3c40 0%, #8b8f96 45%, #d6d9dd 75%, #ffffff 100%);
+
+  /* ── 重點色（烈焰紅，僅用於關鍵行動／狀態） ── */
+  --sk-red: #e2102b;
+  --sk-red-dark: #9c0b1e;
+  --sk-red-gradient: linear-gradient(135deg, #ff2d3d 0%, #9c0b1e 100%);
+
+  /* ── 背景色（舞台黑） ── */
+  --sk-bg: #0a0a0a;
+  --sk-bg-raised: #161616;
+
+  /* ── 玻璃卡片面 ── */
+  --sk-surface: rgba(180, 184, 191, 0.06);
+  --sk-surface-soft: rgba(180, 184, 191, 0.12);
+  --sk-border: rgba(180, 184, 191, 0.35);
+
+  /* ── 文字色（銀白，呼應專輯封面） ── */
+  --sk-text: #f1f2f4;
+  --sk-text-muted: #a7abb2;
+}
+
+html,
+body {
+  background-color: var(--sk-bg);
+  color: var(--sk-text);
+}
+
+body {
+  font-family: 'Noto Sans TC', system-ui, sans-serif;
+  line-height: 1.6;
+  position: relative;
+}
+
+a {
+  color: var(--sk-secondary);
+}
+
+.text-body-secondary {
+  color: silver !important;
+}
+
+/* 舞台感光暈：兩顆柔光暈，僅作背景點綴，不搶內容 */
+body::before,
+body::after {
+  content: "";
+  position: fixed;
+  width: 40vw;
+  height: 40vw;
+  border-radius: 50%;
+  filter: blur(80px);
+  opacity: 0.16;
+  z-index: -1;
+  pointer-events: none;
+}
+
+body::before {
+  top: -10vw;
+  left: -10vw;
+  background: var(--sk-primary);
+}
+
+body::after {
+  bottom: -10vw;
+  right: -10vw;
+  background: var(--sk-accent);
+}
+
+/* ============ Navbar（前台／後台共用） ============ */
+.sk-navbar {
+  background-color: var(--sk-bg-raised) !important;
+  border-bottom: 1px solid var(--sk-border);
+  padding-top: 0.75rem;
+  padding-bottom: 0.75rem;
+}
+
+.sk-navbar .navbar-brand,
+.sk-brand-text {
+  background: var(--sk-gradient);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  font-weight: 700;
+  letter-spacing: 1px;
+}
+
+.sk-navbar .nav-link {
+  color: var(--sk-text);
+}
+
+.sk-navbar .nav-link:hover,
+.sk-navbar .nav-link.active {
+  color: var(--sk-secondary);
+}
+
+.sk-navbar .nav-link.disabled {
+  color: #5c5f64;
+}
+
+/* ============ 品牌按鈕 ============ */
+.btn-brand {
+  background: var(--sk-red-gradient);
+  border: none;
+  color: #fff;
+  font-weight: 600;
+}
+
+.btn-brand:hover,
+.btn-brand:focus {
+  filter: brightness(1.1);
+  color: #fff;
+}
+
+.btn-outline-brand {
+  color: var(--sk-secondary);
+  border-color: var(--sk-border);
+  background-color: transparent;
+}
+
+.btn-outline-brand:hover {
+  background: var(--sk-red-gradient);
+  border-color: transparent;
+  color: #fff;
+}
+
+/* ============ 主視覺（嵌入影片背景，尺寸依影片比例） ============ */
+.sk-hero {
+  border-bottom: 1px solid var(--sk-border);
+  overflow: hidden;
+}
+
+.sk-hero h1 {
+  color: #fff;
+  letter-spacing: 2px;
+}
+
+.sk-hero .sk-title-bar {
+  width: 60px;
+  height: 3px;
+  background: var(--sk-gradient);
+  margin: 18px auto 0;
+  border-radius: 2px;
+}
+
+.sk-hero-video-frame {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  background: #000;
+}
+
+.sk-hero-video-frame iframe {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  border: 0;
+  pointer-events: none;
+}
+
+.sk-hero-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(10, 10, 10, 0.35) 0%, rgba(10, 10, 10, 0.8) 100%);
+}
+
+.sk-hero-content {
+  position: relative;
+  z-index: 2;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+}
+
+/* ============ 區塊標題 ============ */
+.sk-section-title {
+  color: var(--sk-text);
+  font-size: 1.25rem;
+  font-weight: 700;
+  letter-spacing: 1px;
+  margin-bottom: 1.25rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.sk-section-title i {
+  color: var(--sk-accent);
+}
+
+/* ============ 玻璃卡片（練習/統計/表格/表單容器共用） ============ */
+.sk-card,
+.sk-surface {
+  background-color: var(--sk-surface);
+  border: 1px solid var(--sk-border);
+  backdrop-filter: blur(10px);
+  color: var(--sk-text);
+  border-radius: 0.75rem;
+}
+
+.sk-card {
+  transition: transform 0.15s ease, box-shadow 0.15s ease, border-color 0.15s ease;
+}
+
+.sk-card:hover {
+  transform: translateY(-4px);
+  border-color: var(--sk-primary);
+  box-shadow: 0 0.75rem 1.75rem rgba(180, 184, 191, 0.3);
+}
+
+.sk-card .card-title {
+  color: #fff;
+}
+
+.sk-stat-value {
+  font-size: 2rem;
+  font-weight: 700;
+  background: var(--sk-gradient);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+/* ============ 練習生歡迎區 ============ */
+.sk-welcome-icon {
+  width: 3.25rem;
+  height: 3.25rem;
+  border-radius: 50%;
+  background: var(--sk-gradient);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+  color: #fff;
+  flex-shrink: 0;
+}
+
+/* ============ 訓練類型徽章（紅／金／黑／米白家族） ============ */
+.badge-type {
+  border-radius: 999px;
+  padding: 0.35em 0.75em;
+  font-weight: 600;
+  border: 1px solid transparent;
+}
+
+.badge-type--vocal   { background: rgba(200, 205, 214, 0.18); color: #dde0e6; border-color: rgba(200, 205, 214, 0.45); }
+.badge-type--dance   { background: rgba(154, 160, 168, 0.18); color: #c9ccd2; border-color: rgba(154, 160, 168, 0.45); }
+.badge-type--rap     { background: rgba(110, 114, 121, 0.30); color: #b7bac0; border-color: rgba(110, 114, 121, 0.55); }
+.badge-type--stage   { background: var(--sk-text); color: #1a1a1a; border-color: var(--sk-text); }
+.badge-type--fitness { background: rgba(150, 154, 161, 0.16); color: #c4c7cd; border-color: rgba(150, 154, 161, 0.4); }
+
+/* ============ 完成狀態徽章 ============ */
+.badge-status {
+  border-radius: 999px;
+  padding: 0.35em 0.75em;
+  font-weight: 600;
+  border: 1px solid transparent;
+}
+
+.badge-status--pending  { background: rgba(150, 154, 161, 0.16); color: var(--sk-text-muted); border-color: rgba(150, 154, 161, 0.35); }
+.badge-status--progress { background: rgba(226, 16, 43, 0.18); color: #ff8a94; border-color: rgba(226, 16, 43, 0.45); }
+.badge-status--done     { background: rgba(52, 211, 153, 0.18); color: #6ee7b7; border-color: rgba(52, 211, 153, 0.45); }
+
+/* ============ Progress（能力進度） ============ */
+.sk-progress {
+  height: 0.6rem;
+  background-color: var(--sk-bg-raised);
+  border: 1px solid var(--sk-border);
+  border-radius: 999px;
+}
+
+.sk-progress .progress-bar {
+  background: var(--sk-gradient);
+}
+
+/* ============ 後台側邊選單 ============ */
+.sk-admin-sidebar {
+  background-color: var(--sk-bg-raised);
+  border-color: var(--sk-border) !important;
+}
+
+.sk-admin-sidebar .nav-link {
+  color: var(--sk-text);
+  border-radius: 0.5rem;
+  margin-bottom: 0.25rem;
+}
+
+.sk-admin-sidebar .nav-link.active {
+  background: var(--sk-gradient);
+  color: #fff;
+  font-weight: 600;
+}
+
+.sk-admin-sidebar .nav-link:not(.active):hover {
+  background-color: var(--sk-surface-soft);
+}
+
+.sk-admin-sidebar .nav-link.disabled {
+  color: #5c5f64;
+}
+
+/* ============ 表格 ============ */
+.sk-surface .table {
+  --bs-table-color: var(--sk-text);
+  --bs-table-bg: transparent;
+  --bs-table-striped-bg: rgba(180, 184, 191, 0.06);
+  --bs-table-hover-bg: rgba(180, 184, 191, 0.1);
+  --bs-table-border-color: var(--sk-border);
+  vertical-align: middle;
+}
+
+.sk-surface .table thead {
+  background-color: var(--sk-surface-soft);
+  color: #fff;
+}
+
+.sk-surface a:not(.btn):not(.nav-link) {
+  color: var(--sk-secondary);
+}
+
+/* ============ 表單元件（暗色輸入框） ============ */
+.form-control,
+.form-select {
+  background-color: var(--sk-bg-raised);
+  border: 1px solid var(--sk-border);
+  color: var(--sk-text);
+}
+
+.form-control:focus,
+.form-select:focus {
+  background-color: var(--sk-bg-raised);
+  border-color: var(--sk-primary);
+  color: var(--sk-text);
+  box-shadow: 0 0 0 0.25rem rgba(180, 184, 191, 0.25);
+}
+
+.form-control::placeholder {
+  color: #6c7076;
+}
+
+.form-control:disabled {
+  background-color: var(--sk-bg-raised);
+  color: var(--sk-text-muted);
+  opacity: 0.7;
+}
+
+.form-label {
+  color: var(--sk-text-muted);
+  font-weight: 500;
+}
+
+.form-check-input {
+  background-color: var(--sk-bg-raised);
+  border-color: var(--sk-border);
+}
+
+.form-check-input:checked {
+  background-color: var(--sk-primary);
+  border-color: var(--sk-primary);
+}
+
+.form-range::-webkit-slider-thumb {
+  background: var(--sk-primary);
+}
+
+.form-range::-moz-range-thumb {
+  background: var(--sk-primary);
+}
+
+/* ============ Footer ============ */
+.sk-footer {
+  background-color: var(--sk-bg-raised);
+  color: var(--sk-text-muted);
+  border-top: 1px solid var(--sk-border);
+}
