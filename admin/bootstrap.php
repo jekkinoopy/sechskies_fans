@@ -177,7 +177,7 @@ function render_header(string $title, string $active = ''): void
         <span>sechskies_fans</span>
         <small>Admin</small>
     </a>
-    <div class="admin-topbar__actions"><span><?= h($_SESSION['admin_name'] ?? '') ?></span><a href="../crystal-dance-survey.html" target="_blank" rel="noopener">查看前臺</a><a href="logout.php">登出</a></div>
+    <div class="admin-topbar__actions"><span><?= h($_SESSION['admin_name'] ?? '') ?></span><a href="../jekki-dance.html" target="_blank" rel="noopener">查看前臺</a><a href="logout.php">登出</a></div>
 </header>
 <div class="admin-shell">
     <aside class="admin-sidebar" id="admin-sidebar">

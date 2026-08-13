@@ -2,443 +2,198 @@
 <html lang="zh-TW">
 
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>sechskies_fans｜水晶練習室</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
-    <link rel="stylesheet" href="assets/css/dashboard.css">
-    <style>
-        body.practice-room-page {
-            background-color: var(--sk-bg);
-            color: var(--sk-text);
-            line-height: 1.6;
-        }
-
-        body.practice-room-page h1,
-        body.practice-room-page h2,
-        body.practice-room-page h3,
-        body.practice-room-page h4,
-        body.practice-room-page p,
-        body.practice-room-page ul,
-        body.practice-room-page ol {
-            margin: 0;
-            padding: 0;
-        }
-
-        body.practice-room-page a {
-            color: inherit;
-            text-decoration: none;
-        }
-
-        #particles {
-            position: fixed;
-            inset: 0;
-            z-index: -1;
-        }
-
-        .mark_b { font-weight: 800; color: #fff; }
-        .mark_y { color: var(--sk-primary); }
-
-        .practice-page-header {
-            text-align: center;
-        }
-
-        .practice-page-header .main-title {
-            display: inline-block;
-            font-size: clamp(2rem, 5vw, 2.75rem);
-            font-weight: 900;
-            letter-spacing: 2px;
-            background: var(--sk-gradient);
-            -webkit-background-clip: text;
-            background-clip: text;
-            color: transparent;
-        }
-
-        .practice-page-header .sub-title {
-            display: block;
-            margin-top: 0.6rem;
-            color: var(--sk-text-muted);
-            font-size: 0.82rem;
-            font-weight: 700;
-            letter-spacing: 2px;
-        }
-
-        body.practice-room-page .practice-room {
-            position: relative;
-            z-index: 1;
-            max-width: 1080px;
-            margin: 0 auto;
-            padding: 2.5rem 1.25rem 3.5rem;
-        }
-
-        body.practice-room-page .practice-room__block {
-            margin-bottom: 4rem;
-        }
-
-        body.practice-room-page .practice-room__block-title {
-            font-size: clamp(1.35rem, 3vw, 1.75rem);
-            font-weight: 900;
-            color: #fff;
-            text-align: center;
-            letter-spacing: 0.06em;
-            margin-bottom: 0.5rem;
-        }
-
-        body.practice-room-page .practice-room__block-sub {
-            display: block;
-            text-align: center;
-            font-size: 0.78rem;
-            font-weight: 700;
-            letter-spacing: 0.22em;
-            color: var(--sk-text-muted);
-            margin-bottom: 2rem;
-        }
-
-        body.practice-room-page .practice-room__block-title::after {
-            content: "";
-            display: block;
-            width: 3rem;
-            height: 3px;
-            margin: 0.85rem auto 0;
-            background: var(--sk-gradient);
-            border-radius: 2px;
-        }
-
-        /* ── Hero ── */
-        body.practice-room-page .practice-room__hero {
-            text-align: center;
-            padding: 2rem 1.25rem 2.5rem;
-            background: var(--sk-surface);
-            border: 1px solid var(--sk-border);
-            border-radius: 20px;
-            margin-bottom: 3.5rem;
-        }
-
-        body.practice-room-page .practice-room__hero-badge {
-            display: inline-block;
-            background: var(--sk-bg-raised);
-            color: var(--sk-primary);
-            font-size: 0.72rem;
-            font-weight: 700;
-            letter-spacing: 0.12em;
-            padding: 0.35rem 1rem;
-            border-radius: 999px;
-            border: 1px solid var(--sk-border);
-            margin-bottom: 1.25rem;
-        }
-
-        body.practice-room-page .practice-room__hero-title {
-            font-size: clamp(2rem, 5.5vw, 3rem);
-            font-weight: 900;
-            color: #fff;
-            letter-spacing: 0.1em;
-            margin-bottom: 0.35rem;
-        }
-
-        body.practice-room-page .practice-room__hero-en {
-            font-size: clamp(0.85rem, 2vw, 1rem);
-            font-weight: 700;
-            letter-spacing: 0.28em;
-            color: var(--sk-text-muted);
-            margin-bottom: 1.5rem;
-        }
-
-        body.practice-room-page .practice-room__hero-lead {
-            max-width: 680px;
-            margin: 0 auto 1.75rem;
-            color: var(--sk-text-muted);
-            font-size: 0.95rem;
-            line-height: 1.9;
-            text-align: left;
-        }
-
-        body.practice-room-page .practice-room__tag-row {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-            gap: 0.55rem;
-            max-width: 640px;
-            margin: 0 auto;
-        }
-
-        body.practice-room-page .practice-room__tag {
-            display: inline-flex;
-            align-items: center;
-            gap: 0.3rem;
-            background: var(--sk-surface-soft);
-            color: #fff;
-            font-size: 0.8rem;
-            font-weight: 700;
-            padding: 0.42rem 0.9rem;
-            border-radius: 999px;
-            border: 1px solid var(--sk-border);
-            white-space: nowrap;
-        }
-
-        /* ── 分館卡片 ── */
-        body.practice-room-page .practice-room__hall-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 1.15rem;
-            align-items: stretch;
-        }
-
-        body.practice-room-page .practice-room__hall-card {
-            display: flex;
-            flex-direction: column;
-            background: var(--sk-surface);
-            border: 1px solid var(--sk-border);
-            border-radius: 16px;
-            padding: 1.5rem 1.35rem;
-            transition: transform 0.2s ease, border-color 0.2s ease;
-        }
-
-        body.practice-room-page .practice-room__hall-card:hover {
-            transform: translateY(-3px);
-            border-color: var(--sk-primary);
-        }
-
-        body.practice-room-page .practice-room__hall-icon {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            width: 2.5rem;
-            height: 2.5rem;
-            background: var(--sk-surface-soft);
-            color: #fff;
-            border-radius: 12px;
-            font-size: 1.1rem;
-            margin-bottom: 0.85rem;
-        }
-
-        body.practice-room-page .practice-room__hall-name {
-            font-size: 1.05rem;
-            font-weight: 800;
-            color: #fff;
-            text-align: center;
-            margin-bottom: 0.65rem;
-            letter-spacing: 0.04em;
-        }
-
-        body.practice-room-page .practice-room__hall-desc {
-            color: var(--sk-text-muted);
-            font-size: 0.88rem;
-            line-height: 1.8;
-            text-align: left;
-            flex: 1;
-            margin-bottom: 1rem;
-        }
-
-        body.practice-room-page .practice-room__hall-link {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            gap: 0.4rem;
-            align-self: flex-start;
-            padding: 0.5rem 1rem;
-            border-radius: 999px;
-            background: var(--sk-red-gradient);
-            color: #fff;
-            font-size: 0.82rem;
-            font-weight: 800;
-            text-decoration: none;
-        }
-
-        body.practice-room-page .practice-room__hall-link:hover {
-            filter: brightness(1.1);
-        }
-
-        /* ── 未來擴充 ── */
-        body.practice-room-page .practice-room__future-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 0.65rem 1.25rem;
-            max-width: 720px;
-            margin: 0 auto;
-        }
-
-        body.practice-room-page .practice-room__future-item {
-            display: flex;
-            align-items: flex-start;
-            gap: 0.55rem;
-            color: var(--sk-text-muted);
-            font-size: 0.88rem;
-            line-height: 1.6;
-            text-align: left;
-        }
-
-        body.practice-room-page .practice-room__future-item i {
-            color: var(--sk-primary);
-            margin-top: 0.15rem;
-            flex-shrink: 0;
-        }
-
-        /* ── 版權聲明 ── */
-        body.practice-room-page .practice-room__notice {
-            max-width: 720px;
-            margin: 0 auto;
-            padding: 1.25rem 1.5rem;
-            background: rgba(255, 255, 255, 0.03);
-            border: 1px solid var(--sk-border);
-            border-radius: 12px;
-            font-size: 0.78rem;
-            color: var(--sk-text-muted);
-            line-height: 1.8;
-            text-align: left;
-        }
-
-        footer {
-            text-align: center;
-            padding: 2.5rem 1.5rem 3rem;
-            color: var(--sk-text-muted);
-            font-size: 0.85rem;
-        }
-
-        footer .studio-link {
-            display: inline-block;
-            margin-top: 0.5rem;
-            color: var(--sk-text-muted);
-        }
-
-        footer .studio-link:hover {
-            color: #fff;
-        }
-
-        /* ── RWD ── */
-        @media (max-width: 767.98px) {
-            body.practice-room-page .practice-room {
-                padding: 1.75rem 1rem 2.5rem;
-            }
-
-            body.practice-room-page .practice-room__hall-grid {
-                grid-template-columns: 1fr;
-            }
-
-            body.practice-room-page .practice-room__future-grid {
-                grid-template-columns: 1fr;
-            }
-        }
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>sechskies_fans｜水晶練習室</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
 </head>
 
-<body class="practice-room-page">
+<body>
 
-    <!-- 共用導覽列 -->
-    <nav class="navbar navbar-expand-lg navbar-dark sk-navbar sticky-top">
-        <div class="container">
-            <a class="navbar-brand" href="crystal-dance-survey.html"><i class="bi bi-gem me-1"></i>水晶男孩推廣部・sechskies_fans</a>
-            <div class="d-flex gap-2">
-                <a class="btn btn-outline-brand btn-sm" href="crystal-dance-survey.html">水晶熱舞社</a>
-                <a class="btn btn-outline-brand btn-sm" href="admin/login.php">後台管理</a>
-            </div>
+  <!-- 共用導覽列 -->
+  <nav class="navbar navbar-expand-lg navbar-dark sk-navbar sticky-top">
+    <div class="container">
+      <a class="navbar-brand" href="jekki-dance.html"><i class="bi bi-gem me-1"></i>水晶男孩推廣部・sechskies_fans</a>
+      <div class="d-flex gap-2">
+        <a class="btn btn-outline-brand btn-sm" href="jekki-dance.html">水晶熱舞社</a>
+        <a class="btn btn-outline-brand btn-sm" href="admin/login.php">後台管理</a>
+      </div>
+    </div>
+  </nav>
+
+  <canvas id="particles"></canvas>
+
+  <!-- 主視覺（嵌入影片背景） -->
+  <header class="sk-hero">
+    <div class="sk-hero-video-frame">
+      <iframe
+        src="https://www.youtube.com/embed/ARi0cfpv6mE?autoplay=1&mute=1&loop=1&playlist=ARi0cfpv6mE&controls=0&modestbranding=1&rel=0&showinfo=0"
+        title="水晶練習室主視覺影片" allow="autoplay; encrypted-media" loading="lazy"></iframe>
+      <div class="sk-hero-overlay"></div>
+      <div class="sk-hero-content container text-center">
+        <h1 class="display-4 fw-bold mb-0">水晶練習室</h1>
+        <div class="sk-title-bar"></div>
+        <span class="sub-title">CRYSTAL PRACTICE ROOM</span>
+      </div>
+    </div>
+  </header>
+
+  <main class="container py-5">
+
+    <!-- 練習室介紹 -->
+    <section class="mb-5">
+      <div class="card sk-card p-4 text-center">
+        <span class="eyebrow mx-auto mb-3">SECHSKIES PRACTICE DEMO</span>
+        <p class="lead text-start text-body-secondary mb-3">
+          水晶練習室是<span class="mark_b mark_y">水晶男孩推廣部</span>底下的粉絲向練習工具，結合水晶熱舞社、水晶歌詞社與水晶嘻哈社概念，將歌曲、舞蹈、歌詞、Rap
+          與應援整理成可以反覆練習的互動頁面。第一版先以舞蹈影片練習與歌詞段落整理為主，未來可擴充唱歌、Rap、應援詞、錄音回放與練習紀錄。
+        </p>
+        <div class="d-flex flex-wrap justify-content-center gap-2">
+          <span class="chip"><i class="bi bi-fire" aria-hidden="true"></i> 水晶熱舞社</span>
+          <span class="chip"><i class="bi bi-music-note-beamed" aria-hidden="true"></i> 水晶歌詞社</span>
+          <span class="chip"><i class="bi bi-mic-fill" aria-hidden="true"></i> 水晶嘻哈社</span>
+          <span class="chip"><i class="bi bi-lightbulb" aria-hidden="true"></i> 應援練習</span>
+          <span class="chip"><i class="bi bi-star-fill" aria-hidden="true"></i> SECHSKIES Practice</span>
         </div>
-    </nav>
+      </div>
+    </section>
 
-    <canvas id="particles"></canvas>
+    <!-- 分館功能 -->
+    <section class="mb-5">
+      <h2 class="sk-section-title justify-content-center"><i class="bi bi-grid-1x2-fill"></i>分館功能</h2>
 
-    <header class="practice-page-header sk-hero">
-        <div class="sk-hero-video-frame">
-            <iframe
-                src="https://www.youtube.com/embed/ARi0cfpv6mE?autoplay=1&mute=1&loop=1&playlist=ARi0cfpv6mE&controls=0&modestbranding=1&rel=0&showinfo=0"
-                title="水晶練習室主視覺影片"
-                allow="autoplay; encrypted-media"
-                loading="lazy"></iframe>
-            <div class="sk-hero-overlay"></div>
-            <div class="sk-hero-content">
-                <h1 class="main-title">水晶練習室</h1>
-                <div class="sk-title-bar"></div>
-                <span class="sub-title">CRYSTAL PRACTICE ROOM</span>
+      <div class="row g-4">
+        <div class="col-md-6">
+          <div class="card sk-card h-100 p-4">
+            <div class="d-flex align-items-center gap-2 mb-3">
+              <i class="bi bi-person-arms-up fs-4 text-white"></i>
+              <span class="badge badge-type badge-type--dance">舞蹈</span>
             </div>
+            <h3 class="h5 text-white">水晶熱舞社</h3>
+            <p class="text-body-secondary small mb-3">以舞蹈影片為核心，支援鏡像、慢速播放、逐段練習與 A-B 循環，適合整理經典舞台、翻跳練習與應援舞蹈。</p>
+            <a class="btn btn-brand mt-auto align-self-start" href="jekki-dance.html">前往水晶熱舞社練習 <i class="bi bi-arrow-right ms-1"></i></a>
+          </div>
         </div>
-    </header>
 
-    <main class="practice-room">
-
-        <!-- ① Hero -->
-        <section class="practice-room__hero" aria-labelledby="practice-hero-title">
-            <span class="practice-room__hero-badge">SECHSKIES PRACTICE DEMO</span>
-            <h2 class="practice-room__hero-title" id="practice-hero-title">水晶練習室</h2>
-            <p class="practice-room__hero-en">Crystal Practice Room</p>
-            <p class="practice-room__hero-lead">
-                水晶練習室是<span class="mark_b mark_y">水晶男孩推廣部</span>底下的粉絲向練習工具，結合水晶熱舞社、水晶歌詞社與水晶嘻哈社概念，將歌曲、舞蹈、歌詞、Rap 與應援整理成可以反覆練習的互動頁面。第一版先以舞蹈影片練習與歌詞段落整理為主，未來可擴充唱歌、Rap、應援詞、錄音回放與練習紀錄。
-            </p>
-            <div class="practice-room__tag-row">
-                <span class="practice-room__tag"><i class="bi bi-fire" aria-hidden="true"></i> 水晶熱舞社</span>
-                <span class="practice-room__tag"><i class="bi bi-music-note-beamed" aria-hidden="true"></i> 水晶歌詞社</span>
-                <span class="practice-room__tag"><i class="bi bi-mic-fill" aria-hidden="true"></i> 水晶嘻哈社</span>
-                <span class="practice-room__tag"><i class="bi bi-lightbulb" aria-hidden="true"></i> 應援練習</span>
-                <span class="practice-room__tag"><i class="bi bi-star-fill" aria-hidden="true"></i> SECHSKIES Practice</span>
+        <div class="col-md-6">
+          <div class="card sk-card h-100 p-4">
+            <div class="d-flex align-items-center gap-2 mb-3">
+              <i class="bi bi-book-half fs-4 text-white"></i>
+              <span class="badge badge-type badge-type--vocal">歌詞</span>
             </div>
-        </section>
+            <h3 class="h5 text-white">水晶歌詞社</h3>
+            <p class="text-body-secondary small mb-3">整理歌曲段落、中文理解、韓文歌詞位置與跟唱提示，未來可加入羅馬拼音、逐句練唱與原唱開關。</p>
+            <span class="badge badge-status badge-status--pending mt-auto align-self-start">籌備中</span>
+          </div>
+        </div>
 
-        <!-- ② 分館功能區 -->
-        <section class="practice-room__block" aria-labelledby="halls-title">
-            <h2 class="practice-room__block-title" id="halls-title">分館功能</h2>
-            <span class="practice-room__block-sub">FOUR PRACTICE HALLS</span>
-            <div class="practice-room__hall-grid">
-                <article class="practice-room__hall-card">
-                    <span class="practice-room__hall-icon" aria-hidden="true"><i class="bi bi-person-arms-up"></i></span>
-                    <h3 class="practice-room__hall-name">水晶熱舞社</h3>
-                    <p class="practice-room__hall-desc">以舞蹈影片為核心，支援鏡像、慢速播放、逐段練習與 A-B 循環，適合整理經典舞台、翻跳練習與應援舞蹈。</p>
-                    <a class="practice-room__hall-link" href="crystal-dance-survey.html">前往水晶熱舞社練習 <i class="bi bi-arrow-right" aria-hidden="true"></i></a>
-                </article>
-                <article class="practice-room__hall-card">
-                    <span class="practice-room__hall-icon" aria-hidden="true"><i class="bi bi-book-half"></i></span>
-                    <h3 class="practice-room__hall-name">水晶歌詞社</h3>
-                    <p class="practice-room__hall-desc">整理歌曲段落、中文理解、韓文歌詞位置與跟唱提示，未來可加入羅馬拼音、逐句練唱與原唱開關。</p>
-                </article>
-                <article class="practice-room__hall-card">
-                    <span class="practice-room__hall-icon" aria-hidden="true"><i class="bi bi-headphones"></i></span>
-                    <h3 class="practice-room__hall-name">水晶嘻哈社</h3>
-                    <p class="practice-room__hall-desc">針對 Rap 段落設計節奏、flow、咬字與慢速練習，未來可加入節拍器與錄音比較。</p>
-                </article>
-                <article class="practice-room__hall-card">
-                    <span class="practice-room__hall-icon" aria-hidden="true"><i class="bi bi-hand-thumbs-up-fill"></i></span>
-                    <h3 class="practice-room__hall-name">水晶應援社</h3>
-                    <p class="practice-room__hall-desc">整理演唱會應援詞、口號、手燈節奏與粉絲活動資訊，讓新加入的 Yellowkies 可以更快跟上。</p>
-                </article>
-                <article class="practice-room__hall-card" style="grid-column: 1 / -1;">
-                    <span class="practice-room__hall-icon" aria-hidden="true"><i class="bi bi-person-video3"></i></span>
-                    <h3 class="practice-room__hall-name">水晶練習生模擬</h3>
-                    <p class="practice-room__hall-desc">體驗努比、昇材、宰鎮、水院的每日練習節奏，含個人練習紀錄與後台管理示範（靜態 Demo，資料非即時同步）。</p>
-                    <a class="practice-room__hall-link" href="trainee-demo/index.html">前往水晶練習生模擬 <i class="bi bi-arrow-right" aria-hidden="true"></i></a>
-                </article>
+        <div class="col-md-6">
+          <div class="card sk-card h-100 p-4">
+            <div class="d-flex align-items-center gap-2 mb-3">
+              <i class="bi bi-headphones fs-4 text-white"></i>
+              <span class="badge badge-type badge-type--rap">Rap</span>
             </div>
-        </section>
+            <h3 class="h5 text-white">水晶嘻哈社</h3>
+            <p class="text-body-secondary small mb-3">針對 Rap 段落設計節奏、flow、咬字與慢速練習，未來可加入節拍器與錄音比較。</p>
+            <span class="badge badge-status badge-status--pending mt-auto align-self-start">籌備中</span>
+          </div>
+        </div>
 
-        <!-- ③ 未來擴充 -->
-        <section class="practice-room__block" aria-labelledby="future-title">
-            <h2 class="practice-room__block-title" id="future-title">未來擴充</h2>
-            <span class="practice-room__block-sub">COMING SOON</span>
-            <ul class="practice-room__future-grid">
-                <li class="practice-room__future-item"><i class="bi bi-check-circle" aria-hidden="true"></i>韓文歌詞 / 羅馬拼音 / 中文理解</li>
-                <li class="practice-room__future-item"><i class="bi bi-check-circle" aria-hidden="true"></i>Rap 節拍器</li>
-                <li class="practice-room__future-item"><i class="bi bi-check-circle" aria-hidden="true"></i>應援詞練習</li>
-                <li class="practice-room__future-item"><i class="bi bi-check-circle" aria-hidden="true"></i>錄音回放</li>
-                <li class="practice-room__future-item"><i class="bi bi-check-circle" aria-hidden="true"></i>錄影回放</li>
-                <li class="practice-room__future-item"><i class="bi bi-check-circle" aria-hidden="true"></i>練習紀錄</li>
-                <li class="practice-room__future-item"><i class="bi bi-check-circle" aria-hidden="true"></i>歌曲資料庫</li>
-                <li class="practice-room__future-item"><i class="bi bi-check-circle" aria-hidden="true"></i>舞台版本比較</li>
-                <li class="practice-room__future-item"><i class="bi bi-check-circle" aria-hidden="true"></i>30TH 應援企劃串接</li>
-            </ul>
-        </section>
+        <div class="col-md-6">
+          <div class="card sk-card h-100 p-4">
+            <div class="d-flex align-items-center gap-2 mb-3">
+              <i class="bi bi-hand-thumbs-up-fill fs-4 text-white"></i>
+              <span class="badge badge-type badge-type--stage">應援</span>
+            </div>
+            <h3 class="h5 text-white">水晶應援社</h3>
+            <p class="text-body-secondary small mb-3">整理演唱會應援詞、口號、手燈節奏與粉絲活動資訊，讓新加入的 Yellowkies 可以更快跟上。</p>
+            <span class="badge badge-status badge-status--pending mt-auto align-self-start">籌備中</span>
+          </div>
+        </div>
 
-        <!-- 版權聲明 -->
-        <aside class="practice-room__notice" aria-label="版權與素材提醒">
-            本頁為粉絲向非商業作品集 Demo，第一版使用示意資料與可替換素材結構，不直接內建完整受版權保護的音源、MV 或歌詞。實際素材請以合法來源或自行製作內容替換。
-        </aside>
+        <div class="col-12">
+          <div class="card sk-card p-4">
+            <div class="d-flex flex-wrap align-items-center gap-3">
+              <div class="sk-welcome-icon"><i class="bi bi-person-video3"></i></div>
+              <div class="me-auto">
+                <div class="fs-5 fw-bold text-white">水晶練習生模擬</div>
+                <p class="text-body-secondary small mb-0">體驗努比、昇材、宰鎮、水院的每日練習節奏，含個人練習紀錄與後台管理示範（靜態 Demo，資料非即時同步）。</p>
+              </div>
+              <a class="btn btn-brand" href="trainee-demo/index.html">前往水晶練習生模擬 <i class="bi bi-arrow-right ms-1"></i></a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
 
-    </main>
+    <!-- 未來擴充 -->
+    <section class="mb-5">
+      <h2 class="sk-section-title justify-content-center"><i class="bi bi-rocket-takeoff-fill"></i>未來擴充</h2>
 
-    <footer>
-        <p>SECHSKIES Fanpage &copy; 2026 - 黃色氣球永遠飄揚</p>
-        <a href="https://jekkinoopy.github.io/Portfolio/" class="studio-link" target="_blank" rel="noopener noreferrer">
-            Design by <span class="mark_b">Jekkinoopy Studio</span>
-        </a>
-    </footer>
+      <div class="card sk-card p-4">
+        <div class="row g-3">
+          <div class="col-md-6 d-flex align-items-start gap-2">
+            <i class="bi bi-check-circle text-white mt-1" aria-hidden="true"></i>
+            <span class="text-body-secondary small">韓文歌詞 / 羅馬拼音 / 中文理解</span>
+          </div>
+          <div class="col-md-6 d-flex align-items-start gap-2">
+            <i class="bi bi-check-circle text-white mt-1" aria-hidden="true"></i>
+            <span class="text-body-secondary small">Rap 節拍器</span>
+          </div>
+          <div class="col-md-6 d-flex align-items-start gap-2">
+            <i class="bi bi-check-circle text-white mt-1" aria-hidden="true"></i>
+            <span class="text-body-secondary small">應援詞練習</span>
+          </div>
+          <div class="col-md-6 d-flex align-items-start gap-2">
+            <i class="bi bi-check-circle text-white mt-1" aria-hidden="true"></i>
+            <span class="text-body-secondary small">錄音回放</span>
+          </div>
+          <div class="col-md-6 d-flex align-items-start gap-2">
+            <i class="bi bi-check-circle text-white mt-1" aria-hidden="true"></i>
+            <span class="text-body-secondary small">錄影回放</span>
+          </div>
+          <div class="col-md-6 d-flex align-items-start gap-2">
+            <i class="bi bi-check-circle text-white mt-1" aria-hidden="true"></i>
+            <span class="text-body-secondary small">練習紀錄</span>
+          </div>
+          <div class="col-md-6 d-flex align-items-start gap-2">
+            <i class="bi bi-check-circle text-white mt-1" aria-hidden="true"></i>
+            <span class="text-body-secondary small">歌曲資料庫</span>
+          </div>
+          <div class="col-md-6 d-flex align-items-start gap-2">
+            <i class="bi bi-check-circle text-white mt-1" aria-hidden="true"></i>
+            <span class="text-body-secondary small">舞台版本比較</span>
+          </div>
+          <div class="col-md-6 d-flex align-items-start gap-2">
+            <i class="bi bi-check-circle text-white mt-1" aria-hidden="true"></i>
+            <span class="text-body-secondary small">30TH 應援企劃串接</span>
+          </div>
+        </div>
+      </div>
+    </section>
 
-    <script src="assets/js/particles.js"></script>
+    <!-- 版權聲明 -->
+    <section>
+      <div class="card sk-card sk-surface p-4">
+        <p class="text-body-secondary small mb-0">
+          本頁為粉絲向非商業作品集 Demo，第一版使用示意資料與可替換素材結構，不直接內建完整受版權保護的音源、MV 或歌詞。實際素材請以合法來源或自行製作內容替換。
+        </p>
+      </div>
+    </section>
+
+  </main>
+
+  <footer>
+    <p>SECHSKIES Fanpage &copy; 2026 - 黃色氣球永遠飄揚</p>
+    <a href="https://jekkinoopy.github.io/Portfolio/" class="studio-link" target="_blank" rel="noopener noreferrer">
+      Design by <span class="mark_b">Jekkinoopy Studio</span>
+    </a>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="assets/js/particles.js"></script>
 </body>
 
 </html>

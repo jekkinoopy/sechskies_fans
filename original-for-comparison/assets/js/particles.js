@@ -24,8 +24,8 @@
             if (this.y > canvas.height) this.y = 0;
         }
         draw() {
-            ctx.fillStyle = "#c9ccd2";
-            ctx.globalAlpha = 0.5;
+            ctx.fillStyle = "#FFDD00";
+            ctx.globalAlpha = 0.6;
             ctx.beginPath();
             ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
             ctx.fill();

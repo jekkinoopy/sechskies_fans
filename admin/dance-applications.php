@@ -48,7 +48,7 @@ render_header('30TH 應援報名', 'dance-applications');
         </select>
         <button class="button" type="submit">篩選</button>
     </form>
-    <a class="button" href="../crystal-dance-survey.html#form-30th" target="_blank" rel="noopener"><i class="bi bi-box-arrow-up-right"></i>查看募集表單</a>
+    <a class="button" href="../jekki-dance.html#form-30th" target="_blank" rel="noopener"><i class="bi bi-box-arrow-up-right"></i>查看募集表單</a>
 </div>
 
 <section class="panel">

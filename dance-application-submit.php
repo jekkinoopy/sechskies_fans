@@ -5,7 +5,7 @@ $config = require __DIR__ . '/admin/config.php';
 
 function return_to_dance_form(string $result): never
 {
-    header('Location: crystal-dance-survey.html?form=' . rawurlencode($result) . '#form-30th', true, 303);
+    header('Location: jekki-dance.html?form=' . rawurlencode($result) . '#form-30th', true, 303);
     exit;
 }
 
