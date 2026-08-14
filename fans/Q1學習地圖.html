@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>102201 Q1 學習地圖｜題本 P19–36 對照程式碼＋新手實作順序</title>
+<style>
+  :root{
+    --bg:#f2f1ec;
+    --surface:#ffffff;
+    --surface-2:#eae8e0;
+    --ink:#21242b;
+    --ink-dim:#5b6270;
+    --line:#dcd9cf;
+    --accent:#c9822a;
+    --accent-ink:#8a5a16;
+    --accent-soft:#f3e2c8;
+    --good:#4c7a54;
+    --good-soft:#e2ecdf;
+    --warn:#a8632f;
+    --warn-soft:#f2e2ce;
+    --dead:#7a7f8a;
+    --dead-soft:#e7e6e2;
+    --ref:#4c6fa8;
+    --ref-soft:#e3eaf5;
+    --code-bg:#ebe8de;
+  }
+  :root[data-theme="dark"]{
+    --bg:#1b1d22;
+    --surface:#24262d;
+    --surface-2:#2b2e36;
+    --ink:#eeeeec;
+    --ink-dim:#a7acb8;
+    --line:#3a3d46;
+    --accent:#e3a75b;
+    --accent-ink:#f3d19f;
+    --accent-soft:#3a2e1a;
+    --good:#8fbf98;
+    --good-soft:#22301f;
+    --warn:#e0a868;
+    --warn-soft:#33281a;
+    --dead:#8c8f97;
+    --dead-soft:#2b2d32;
+    --ref:#84a4de;
+    --ref-soft:#20293a;
+    --code-bg:#2a2c33;
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --bg:#1b1d22;
+      --surface:#24262d;
+      --surface-2:#2b2e36;
+      --ink:#eeeeec;
+      --ink-dim:#a7acb8;
+      --line:#3a3d46;
+      --accent:#e3a75b;
+      --accent-ink:#f3d19f;
+      --accent-soft:#3a2e1a;
+      --good:#8fbf98;
+      --good-soft:#22301f;
+      --warn:#e0a868;
+      --warn-soft:#33281a;
+      --dead:#8c8f97;
+      --dead-soft:#2b2d32;
+      --ref:#84a4de;
+      --ref-soft:#20293a;
+      --code-bg:#2a2c33;
+    }
+  }
+
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    background:var(--bg);
+    color:var(--ink);
+    font-family:"Noto Sans TC","PingFang TC","Microsoft JhengHei","Segoe UI",sans-serif;
+    line-height:1.8;
+    -webkit-font-smoothing:antialiased;
+  }
+  .mono{
+    font-family:ui-monospace,SFMono-Regular,"Noto Sans Mono",Menlo,Consolas,monospace;
+    font-variant-numeric:tabular-nums;
+  }
+  .page{max-width:880px;margin:0 auto;padding:56px 28px 96px;}
+  header.hero{border-bottom:1px solid var(--line);padding-bottom:28px;margin-bottom:36px;}
+  .eyebrow{
+    font-family:ui-monospace,SFMono-Regular,"Noto Sans Mono",Menlo,Consolas,monospace;
+    font-size:12.5px;letter-spacing:.12em;text-transform:uppercase;
+    color:var(--accent-ink);margin:0 0 14px;
+  }
+  h1{font-size:clamp(26px,4vw,34px);line-height:1.35;margin:0 0 12px;text-wrap:balance;letter-spacing:-.01em;}
+  .lede{color:var(--ink-dim);font-size:16px;max-width:64ch;margin:0;}
+  section{margin:52px 0;}
+  section:first-of-type{margin-top:0;}
+  .sec-head{display:flex;align-items:baseline;gap:10px;margin-bottom:16px;}
+  .sec-num{
+    font-family:ui-monospace,SFMono-Regular,"Noto Sans Mono",Menlo,Consolas,monospace;
+    font-size:13px;color:var(--accent-ink);background:var(--accent-soft);
+    border-radius:4px;padding:2px 7px;letter-spacing:.02em;
+  }
+  h2{font-size:20px;margin:0;letter-spacing:-.005em;}
+  h3{font-size:16px;margin:0 0 8px;}
+  p{margin:0 0 14px;}
+
+  .legend{display:flex;flex-wrap:wrap;gap:10px 18px;font-size:14px;color:var(--ink-dim);}
+  .chip{
+    display:inline-flex;align-items:center;gap:5px;font-size:12.5px;font-weight:600;
+    padding:2px 9px;border-radius:999px;white-space:nowrap;
+    print-color-adjust:exact;-webkit-print-color-adjust:exact;
+  }
+  .chip-good{background:var(--good-soft);color:var(--good);}
+  .chip-warn{background:var(--warn-soft);color:var(--warn);}
+  .chip-dead{background:var(--dead-soft);color:var(--dead);}
+  .chip-ref{background:var(--ref-soft);color:var(--ref);}
+
+  .callout{
+    border-left:3px solid var(--accent);background:var(--accent-soft);
+    border-radius:0 8px 8px 0;padding:14px 18px;font-size:14.5px;color:var(--ink);
+  }
+  .callout b{color:var(--accent-ink);}
+  .callout.warn{border-left-color:var(--warn);background:var(--warn-soft);}
+  .callout.warn b{color:var(--warn);}
+
+  .table-wrap{overflow-x:auto;border:1px solid var(--line);border-radius:8px;margin-bottom:14px;}
+  table{border-collapse:collapse;width:100%;min-width:640px;font-size:14px;background:var(--surface);}
+  th,td{text-align:left;padding:10px 14px;border-bottom:1px solid var(--line);vertical-align:top;}
+  thead th{
+    background:var(--surface-2);font-size:12.5px;letter-spacing:.03em;text-transform:uppercase;
+    color:var(--ink-dim);font-family:ui-monospace,SFMono-Regular,"Noto Sans Mono",Menlo,Consolas,monospace;
+    font-weight:600;
+  }
+  tbody tr:last-child td{border-bottom:none;}
+  code.path{
+    font-family:ui-monospace,SFMono-Regular,"Noto Sans Mono",Menlo,Consolas,monospace;
+    background:var(--code-bg);padding:1px 6px;border-radius:4px;font-size:12.5px;white-space:nowrap;
+  }
+
+  ol.outline{list-style:none;margin:0;padding:0;counter-reset:step;}
+  ol.outline li{counter-increment:step;position:relative;padding:14px 0 14px 44px;border-top:1px solid var(--line);}
+  ol.outline li:last-child{border-bottom:1px solid var(--line);}
+  ol.outline li::before{
+    content:counter(step);position:absolute;left:0;top:14px;width:26px;height:26px;border-radius:50%;
+    background:var(--surface-2);color:var(--ink-dim);
+    font-family:ui-monospace,SFMono-Regular,"Noto Sans Mono",Menlo,Consolas,monospace;
+    font-size:12.5px;display:flex;align-items:center;justify-content:center;
+  }
+  .outline-head{display:flex;flex-wrap:wrap;align-items:center;gap:8px 10px;margin-bottom:5px;}
+  .outline-title{font-weight:700;font-size:15px;}
+  .outline-page{
+    font-family:ui-monospace,SFMono-Regular,"Noto Sans Mono",Menlo,Consolas,monospace;
+    font-size:11.5px;color:var(--ink-dim);
+  }
+  .outline-body{margin:0;color:var(--ink-dim);font-size:14px;}
+  .outline-body b{color:var(--ink);font-weight:600;}
+  .outline-file{margin:6px 0 0;font-size:13px;color:var(--ink-dim);}
+
+  .mech{
+    border:1px solid var(--line);border-radius:8px;padding:18px 20px;margin-bottom:14px;background:var(--surface);
+  }
+  .mech h3{display:flex;align-items:center;gap:8px;}
+  .mech ol{margin:8px 0 0;padding-left:20px;font-size:14px;color:var(--ink-dim);}
+  .mech ol li{margin-bottom:5px;}
+  .mech ol li b{color:var(--ink);}
+
+  ol.steps{margin:0;padding-left:0;list-style:none;counter-reset:st;}
+  ol.steps li{counter-increment:st;position:relative;padding:10px 0 10px 40px;border-top:1px solid var(--line);font-size:14.5px;color:var(--ink-dim);}
+  ol.steps li:last-child{border-bottom:1px solid var(--line);}
+  ol.steps li::before{
+    content:counter(st);position:absolute;left:0;top:10px;width:24px;height:24px;border-radius:6px;
+    background:var(--accent-soft);color:var(--accent-ink);font-weight:700;
+    font-family:ui-monospace,SFMono-Regular,"Noto Sans Mono",Menlo,Consolas,monospace;
+    font-size:12px;display:flex;align-items:center;justify-content:center;
+  }
+  ol.steps li b{color:var(--ink);}
+
+  footer.note{margin-top:64px;padding-top:20px;border-top:1px solid var(--line);color:var(--ink-dim);font-size:13px;}
+  a{color:var(--ref);}
+  a:focus-visible,button:focus-visible{outline:2px solid var(--accent);outline-offset:2px;}
+
+  @media print{
+    body{background:#fff;color:#000;}
+    .page{max-width:100%;padding:0;}
+    .table-wrap,.mech{border-color:#ccc;}
+    section{margin:34px 0;page-break-inside:avoid;}
+    .chip{print-color-adjust:exact;-webkit-print-color-adjust:exact;}
+  }
+</style>
+</head>
+<body>
+
+<div class="page">
+
+  <header class="hero">
+    <p class="eyebrow">網頁設計乙級 · Q1（102201）學習地圖</p>
+    <h1>讀懂老師寫好的 102201：題本 P19–36 逐段對照真實程式碼</h1>
+    <p class="lede">
+      這是你第一次接觸這份考題，這份地圖用跟 Q2 學習地圖一樣的格式：每一項動作要求後面標實際負責的檔案，內容是實際讀過
+      <code class="path">11501-BQUIZ01</code> 的程式碼確認過的，不是用檔名猜的。原始素材在
+      <code class="path">11501-BQUIZ01\102201</code>。最後面 <b>F 節</b>是給第一次做這題的你，一步一步照順序練習的建議流程。
+    </p>
+  </header>
+
+  <section id="legend">
+    <div class="sec-head"><h2>圖例</h2></div>
+    <div class="legend">
+      <span><span class="chip chip-good">🟢 對應清楚</span>照著檔案讀就懂，工法可以直接搬去用</span>
+      <span><span class="chip chip-warn">🟡 特別留意</span>實作有取巧、簡化，或跟題本要求有落差，要弄懂「為什麼」</span>
+      <span><span class="chip chip-dead">⚫ 未實作／死碼</span>題本沒硬性要求、範例沒接起來，或資料庫是空的要自己補</span>
+    </div>
+  </section>
+
+  <section id="outline">
+    <div class="sec-head"><span class="sec-num">A</span><h2>題本逐段大綱（P19–36，從頭到尾）</h2></div>
+    <ol class="outline">
+      <li>
+        <div class="outline-head"><span class="outline-title">所需檔案清單</span><span class="outline-page">p.19</span><span class="chip chip-ref">🔵</span></div>
+        <p class="outline-body">01A01~02.txt（最新消息／動態文字廣告）、01B01~04.jpg（標題圖片）、01C01~06.gif（動畫圖片）、01D01~10.jpg（校園映像）、01E01~02.jpg（上下小圖示）、01P01~04.htm（管理登入／首頁／後台管理／詳細內容 四種版型）。</p>
+      </li>
+      <li>
+        <div class="outline-head"><span class="outline-title">試題說明一～八</span><span class="outline-page">p.19–20</span><span class="chip chip-dead">⚫</span></div>
+        <p class="outline-body">四題共同的通用規則（D:磁碟資料夾規範、評分原則、扣分規則），四題都一樣，看過一次記起來就好。</p>
+      </li>
+      <li>
+        <div class="outline-head"><span class="outline-title">動作要求 (一) 建資料夾、版面尺寸、伺服器</span><span class="outline-page">p.20</span><span class="chip chip-good">🟢</span></div>
+        <p class="outline-body">D:\webXX 資料夾、1024×768 置中、127.0.0.1 起本機站台、資料庫伺服器須運作。</p>
+        <p class="outline-file">對應：整包 <code class="path">11501-BQUIZ01</code> 直接放 XAMPP 站台根目錄；資料庫用 <code class="path">db21.sql</code> 匯入（庫名 <span class="mono">db21</span>，跟老師示範專案命名一致，正式應檢時要改成 <span class="mono">dbXX</span>）。</p>
+      </li>
+      <li>
+        <div class="outline-head"><span class="outline-title">動作要求 (二) 網站架構與版型</span><span class="outline-page">p.20–24 · 圖1–9</span><span class="chip chip-good">🟢</span></div>
+        <p class="outline-body">架構圖（網站標題／選單／動態廣告／動畫輪播／最新消息／校園映像／進站人數／頁尾／後台管理）＋ 4 種版型：首頁、更多內容或詳細資料顯示、管理登入區、後台管理。</p>
+        <p class="outline-file">對應：<code class="path">index.php</code>（前台外殼：標題／主選單／進站人數／校園映像／頁尾，中間用 <span class="mono">?do=xxx</span> include <code class="path">front/*.php</code> 切換版型）＋ <code class="path">admin.php</code>（後台外殼，同樣用 <span class="mono">?do=xxx</span> include <code class="path">back/*.php</code>）。</p>
+      </li>
+      <li>
+        <div class="outline-head"><span class="outline-title">動作要求 (三) 網站標題區</span><span class="outline-page">p.25 · 圖10–12</span><span class="chip chip-warn">🟡 機制見 D-3</span></div>
+        <p class="outline-body">評分前需 4 筆標題圖＋替代文字、後台可新增上傳（含縮圖 300×30±2px）、可選擇顯示（單選）、前台顯示所選圖與替代文字、可刪除、可更新圖片、可修改替代文字。</p>
+        <p class="outline-file">對應：<code class="path">back/title.php</code>（列表＋<span class="mono">radio name="sh"</span> 單選顯示＋文字輸入框）→ <code class="path">include/title.php</code>（新增表單）→ <code class="path">api/add.php?table=title</code>（新增時故意把 <span class="mono">sh</span> 設 0，代表新圖預設不顯示，要手動去勾選才會換成顯示中的那張）→ <code class="path">api/edit.php?table=title</code>（改文字＋單選顯示＋批次刪除）→ <code class="path">include/update_title.php</code>／<code class="path">api/update.php?table=title</code>（只換圖片檔）。</p>
+        <p class="outline-body" style="margin-top:6px"><b>跟題本有落差：</b>後台圖片只用 CSS <span class="mono">style="width:300px;height:30px"</span> 硬擠成縮圖大小，不是真的產生縮圖檔——這樣可以過，但如果評分要求「縮圖檔案」就要自己補圖片處理。</p>
+      </li>
+      <li>
+        <div class="outline-head"><span class="outline-title">動作要求 (四) 動態文字廣告區</span><span class="outline-page">p.26 · 圖13–14</span><span class="chip chip-good">🟢</span></div>
+        <p class="outline-body">評分前 4 筆廣告文字、新增、設定顯示內容、顯示多則、修改、刪除。</p>
+        <p class="outline-file">對應：<code class="path">include/marquee.php</code>（<span class="mono">&lt;marquee&gt;</span> 跑馬燈，把 <span class="mono">sh=1</span> 的廣告文字全部串接顯示）＋ <code class="path">back/ad.php</code>（列表＋checkbox 顯示／刪除）→ <code class="path">include/ad.php</code>（新增）→ <code class="path">api/edit.php?table=ad</code>（改文字＋顯示勾選＋刪除）。</p>
+      </li>
+      <li>
+        <div class="outline-head"><span class="outline-title">動作要求 (五) 動畫圖片輪播區</span><span class="outline-page">p.27 · 圖15–16</span><span class="chip chip-good">🟢</span></div>
+        <p class="outline-body">評分前 4 筆動畫圖片、新增上傳、設定使用、自動輪播顯示、更新、刪除。</p>
+        <p class="outline-file">對應：<code class="path">front/main.php</code>（JS 陣列存 <span class="mono">sh=1</span> 的圖檔路徑，<span class="mono">setInterval(...,3000)</span> 每 3 秒換一張 <span class="mono">&lt;embed&gt;</span>）＋ <code class="path">back/mvim.php</code>（列表＋checkbox 顯示／刪除／更換動畫）→ <code class="path">include/mvim.php</code>（新增）→ <code class="path">api/edit.php?table=mvim</code>。</p>
+      </li>
+      <li>
+        <div class="outline-head"><span class="outline-title">動作要求 (六) 校園映像區</span><span class="outline-page">p.28–29 · 圖17–19</span><span class="chip chip-warn">🟡 機制見 D-4</span></div>
+        <p class="outline-body">評分前 4 筆圖片、新增上傳（前台 150×103／後台 100×68，皆 ±2px）、設定使用、超過 3 張用 ▲▼ 控制顯示、更新、刪除、超過 3 張後台要分頁、分頁「&lt;」「&gt;」目前頁放大。</p>
+        <p class="outline-file">對應：<code class="path">index.php</code> 內建 <span class="mono">pp(x)</span> JS 函式（前台 ▲▼，一次顯示 3 張，純前端 hide/show，沒有真的分頁）＋ <code class="path">back/image.php</code>（後台真分頁，<span class="mono">limit $start,$div</span>，每頁 3 筆，「&lt;」「&gt;」＋目前頁字放大 20px）→ <code class="path">include/image.php</code>（新增）→ <code class="path">api/edit.php?table=image</code>（僅顯示勾選＋刪除，沒有文字欄）→ <code class="path">include/update_image.php</code>／<code class="path">api/update.php?table=image</code>（換圖）。</p>
+        <p class="outline-body" style="margin-top:6px"><b>跟題本有落差：</b>題本要求前台 150×103、後台 100×68 兩種尺寸；示範專案前後台都用 <span class="mono">150×103</span>，後台縮圖沒有縮小——自己刻的時候記得把後台那顆 <span class="mono">img</span> 的 CSS 改成 100×68 才符合規格。</p>
+      </li>
+      <li>
+        <div class="outline-head"><span class="outline-title">動作要求 (七) 進站總人數區</span><span class="outline-page">p.29–30 · 圖20–21</span><span class="chip chip-warn">🟡 機制見 D-1</span></div>
+        <p class="outline-body">顯示累積總人數、重整頁面不增加、關閉原頁面重開新頁面才增加、後台可修改。</p>
+        <p class="outline-file">對應：<code class="path">api/db.php</code>（每頁都會 include 到，用 <span class="mono">$_SESSION['visit']</span> 當旗標，見下方機制拆解）＋ <code class="path">index.php</code>／<code class="path">admin.php</code>（顯示 <span class="mono">$Total-&gt;find(1)['total']</span>）＋ <code class="path">back/total.php</code>（單一數字輸入框）→ <code class="path">api/edit_value.php?table=total</code>。</p>
+      </li>
+      <li>
+        <div class="outline-head"><span class="outline-title">動作要求 (八) 頁尾版權區</span><span class="outline-page">p.30 · 圖22–23</span><span class="chip chip-warn">🟡 有死碼</span></div>
+        <p class="outline-body">顯示版權內容、後台可修改。</p>
+        <p class="outline-file">對應：<code class="path">index.php</code>／<code class="path">admin.php</code> 頁尾（顯示 <span class="mono">$Bottom-&gt;find(1)['bottom']</span>）＋ <code class="path">back/bottom.php</code>（單一文字輸入框，表單其實是 post 到 <code class="path">api/edit_value.php?table=bottom</code>）。</p>
+        <p class="outline-body" style="margin-top:6px"><b>死碼：</b><code class="path">api/edit_bottom.php</code> 這支檔案存在但完全沒被任何表單呼叫，是 <span class="mono">edit_value.php</span> 通用化之後留下的舊檔——去讀這支檔案會找到功能一樣的東西，但它不是實際在跑的那支，別被檔名騙了。</p>
+      </li>
+      <li>
+        <div class="outline-head"><span class="outline-title">動作要求 (九) 最新消息區</span><span class="outline-page">p.31–32 · 圖24–29</span><span class="chip chip-good">🟢</span></div>
+        <p class="outline-body">評分前至少 6 筆最新消息、新增、修改、設定顯示內容、首頁顯示 5 則、滑鼠移至彈出視窗顯示詳細內容、超過 5 則顯示「More…」、點選進入更多消息顯示、每頁 5 筆分頁、分頁「&lt;」「&gt;」目前頁放大、刪除。</p>
+        <p class="outline-file">對應：<code class="path">front/main.php</code>（首頁 top 5，<span class="mono">.ssaa li</span> hover 用 <span class="mono">#altt</span> 浮動框顯示全文，count&gt;5 才顯示 More 連結到 <span class="mono">?do=news</span>）→ <code class="path">front/news.php</code>（每頁 5 筆 <span class="mono">limit</span> 分頁，同款 hover 彈窗，目前頁 <span class="mono">font-size:20px</span> 放大）＋ <code class="path">back/news.php</code>（後台每頁 4 筆分頁＋textarea＋checkbox 顯示／刪除）→ <code class="path">include/news.php</code>（新增）→ <code class="path">api/edit.php?table=news</code>。</p>
+      </li>
+      <li>
+        <div class="outline-head"><span class="outline-title">動作要求 (十) 管理登入按鈕功能</span><span class="outline-page">p.32–34 · 圖30–32</span><span class="chip chip-warn">🟡 機制見 D-2</span></div>
+        <p class="outline-body">點選顯示登入頁面、輸入 admin/1234 送出後進入後台（預設網站標題管理）、錯誤顯示「帳號或密碼輸入錯誤」並清空重填、清除按鈕、管理登出返回登入頁面。</p>
+        <p class="outline-file">對應：<code class="path">front/login.php</code>（原生表單 post，不是 AJAX）→ <code class="path">api/login.php</code>（<span class="mono">$Admin-&gt;count($_POST)</span> 比對帳密，對了設 <span class="mono">$_SESSION['login']=1</span> 導向 <code class="path">admin.php</code>；錯了印 <span class="mono">alert()</span>+導回登入頁）；<code class="path">admin.php</code> 預設 <span class="mono">$do="title"</span> 對應後台管理選單第一項；登出按鈕在多支 <code class="path">back/*.php</code> 裡各自寫 <span class="mono">document.cookie='user='; location.replace('index.php')</span>。</p>
+      </li>
+      <li>
+        <div class="outline-head"><span class="outline-title">動作要求 (十一) 管理者帳號管理功能</span><span class="outline-page">p.35 · 圖33–34</span><span class="chip chip-good">🟢</span></div>
+        <p class="outline-body">新增管理者帳號、修改帳號密碼、刪除帳號（但不可刪掉 admin 自己）。</p>
+        <p class="outline-file">對應：<code class="path">back/admin.php</code>（列表時故意 <span class="mono">if($row['acc']!='admin')</span> 把預設帳號從清單裡濾掉，讓它連編輯／刪除的勾選框都不會出現）→ <code class="path">include/admin.php</code>（新增表單）→ <code class="path">api/add.php?table=admin</code>（<span class="mono">unset($_POST['pw2'])</span> 去掉確認密碼欄再存）→ <code class="path">api/edit.php?table=admin</code>（改帳密＋刪除）。</p>
+      </li>
+      <li>
+        <div class="outline-head"><span class="outline-title">動作要求 (十二) 選單管理功能</span><span class="outline-page">p.36 · 圖35–36</span><span class="chip chip-good">🟢 對照 Q2 問卷父子表</span></div>
+        <p class="outline-body">評分前建 2 個主選單（管理登入／網站首頁，分別連到對應頁面）、網站首頁下建 1 個次選單「更多內容」、新增／修改／刪除主選單、新增／修改／刪除次選單。</p>
+        <p class="outline-file">對應：<code class="path">back/menu.php</code>（列出 <span class="mono">main_id=0</span> 的主選單、旁邊顯示該主選單底下次選單數量）→「編輯次選單」按鈕彈窗 <code class="path">include/submenu.php?id=X</code>（列出 <span class="mono">main_id=X</span> 的次選單，「更多次選單」按鈕用 JS <span class="mono">more()</span> 動態插入空白列）→ <code class="path">api/submenu.php</code>（先處理已存在的 <span class="mono">id[]</span> 修改／刪除，再把 <span class="mono">text2[]/href2[]</span> 非空的新列各自寫入、<span class="mono">main_id</span> 指向該主選單）；新增主選單走 <code class="path">include/menu.php</code>→<code class="path">api/add.php?table=menu</code>（強制 <span class="mono">main_id=0</span>）。</p>
+        <p class="outline-body" style="margin-top:6px"><b>資料庫是空的：</b><span class="mono">menu</span> 表目前沒有任何種子資料，動手做的時候記得先手動新增「管理登入」「網站首頁」兩個主選單＋「網站首頁」底下的「更多內容」次選單，這是題本明講「評分前」要先建好的資料，不是程式漏做。</p>
+      </li>
+      <li>
+        <div class="outline-head"><span class="outline-title">資料備份</span><span class="outline-page">p.36</span><span class="chip chip-dead">⚫</span></div>
+        <p class="outline-body">四題通用備份清單（主文件目錄／XAMPP 環境設定檔／資料庫／其它設定），考前照流程做一次就好。</p>
+      </li>
+    </ol>
+  </section>
+
+  <section id="mechanisms">
+    <div class="sec-head"><span class="sec-num">D</span><h2>四個值得拆開來看的關鍵機制</h2></div>
+
+    <div class="mech">
+      <h3><span class="chip chip-warn">D-1</span>進站總人數——比 Q2 更簡化的計數器版本</h3>
+      <ol>
+        <li>機制一樣寫在 <code class="path">api/db.php</code>（每一頁都會 include 到），用 <b><span class="mono">$_SESSION['visit']</span></b> 當「這個瀏覽階段是否已經算過」的旗標。</li>
+        <li>只有 session 裡<b>還沒有</b>這個旗標時，才會去 <span class="mono">total</span> 表把 <span class="mono">id=1</span> 那一列 <span class="mono">total+1</span> 並存回去。</li>
+        <li>跟 102202（Q2）不同：這裡 <span class="mono">total</span> 表<b>沒有日期欄位</b>，永遠只有一列（<span class="mono">id=1</span>）記「累積總數」——因為 102201 題本只要求「累積」，沒有像 102202 那樣要分「今日／累計」兩個數字。</li>
+        <li>同一個瀏覽階段（同一個 session）內不管重整幾次都不會再加，滿足「重整不加」；但要注意：<b>只要瀏覽器沒關閉、session 沒過期，就算開新分頁也不會再加</b>，跟題本「關閉原頁面重開新頁面才增加」的字面意思有一點落差，是用 session 生命週期去模擬瀏覽器關閉，這是這類考題常見的取巧寫法，先理解這個限制，考場實測時注意瀏覽器是否要整個關掉才會重算。</li>
+      </ol>
+    </div>
+
+    <div class="mech">
+      <h3><span class="chip chip-warn">D-2</span>後台登入其實沒有真的擋門——admin.php 沒有做保護</h3>
+      <ol>
+        <li><code class="path">api/login.php</code> 驗證成功後確實有寫 <span class="mono">$_SESSION['login']=1</span>，但翻遍 <code class="path">admin.php</code> 開頭，<b>並沒有任何一行檢查這個 session</b>（例如 <span class="mono">if(!isset($_SESSION['login'])) to('index.php?do=login');</span>）。</li>
+        <li>結果是：即使沒登入，只要直接在網址列打 <span class="mono">admin.php</span> 一樣能進後台操作——這是示範專案為了先求「登入表單長對、流程走得通」而先省略的保護機制。</li>
+        <li>「管理登出」按鈕目前寫的是 <span class="mono">document.cookie='user='; location.replace('index.php')</span>——清掉一個叫 <span class="mono">user</span> 的 cookie，但全專案沒有任何地方真的在讀這個 cookie，也沒有清掉 <span class="mono">$_SESSION['login']</span>，等於登出鍵目前只是「導回首頁」，沒有真的登出。</li>
+      </ol>
+      <p class="outline-body" style="margin-top:8px">自己動手刻的時候，這兩個地方建議補起來：<b>admin.php 開頭加 session 驗證導回登入頁</b>、<b>登出改成 <span class="mono">session_destroy()</span> 或 <span class="mono">unset($_SESSION['login'])</span> 再導頁</b>——題本評分標準雖然只看「輸入 admin/1234 能不能進後台」，但監評現場考官很可能會手動測試「沒登入直接打網址」，補上去比較保險。</p>
+    </div>
+
+    <div class="mech">
+      <h3><span class="chip chip-good">D-3</span>全站共用一組 CRUD 控制器——這是整個示範專案最重要的設計</h3>
+      <ol>
+        <li>整個後台的新增／修改／刪除，<b>只有三支通用檔案</b>：<code class="path">api/add.php</code>、<code class="path">api/edit.php</code>、<code class="path">api/update.php</code>，靠網址上的 <span class="mono">?table=xxx</span> 決定要操作哪張表。</li>
+        <li>關鍵寫法是 PHP 的「變數變數」：<span class="mono">$db = ${ucfirst($table)}</span>——如果 <span class="mono">$table='title'</span>，這行等於拿到 <code class="path">api/db.php</code> 裡宣告好的 <span class="mono">$Title</span> 物件，換句話說<b>不用寫 if/switch 去判斷要存哪張表</b>，直接靠字串對應到同名變數。</li>
+        <li><code class="path">api/add.php</code> 裡唯一需要 <span class="mono">switch($table)</span> 分岔的地方，是各表新增時「預設值」不同：<span class="mono">title</span> 新增後預設不顯示（<span class="mono">sh=0</span>，因為顯示是單選）、<span class="mono">admin</span> 新增要去掉確認密碼欄、<span class="mono">menu</span> 新增主選單要強制 <span class="mono">main_id=0</span> 且預設顯示、其餘表預設 <span class="mono">sh=1</span>。</li>
+        <li><code class="path">api/edit.php</code> 一樣先判斷這筆 id 有沒有被勾「刪除」，有就 <span class="mono">$db-&gt;del($id)</span>；沒有就照各表欄位組合起來 <span class="mono">$db-&gt;save($row)</span>——這支檔案的 <span class="mono">switch</span> 分岔比較長，因為每張表可修改的欄位都不一樣（title 改文字＋單選顯示、ad/news 改文字＋多選顯示、mvim/image 只改多選顯示、admin 改帳密、menu 改連結文字＋多選顯示）。</li>
+      </ol>
+      <p class="outline-body" style="margin-top:8px">學習重點：<b>先把這三支通用檔案讀懂，比逐一讀九張表的後台頁面更重要</b>——因為之後不管換哪一題（102202/103/104），這套「一個 <span class="mono">DB</span> 泛用類別＋<span class="mono">?table=</span> 動態切換＋<span class="mono">${ucfirst()}</span> 變數變數」的骨架幾乎會整組搬過去用，102202 的 <span class="mono">api/edit_acc.php</span>、<span class="mono">api/edit_news.php</span> 也是同一種思路的變形。</p>
+    </div>
+
+    <div class="mech">
+      <h3><span class="chip chip-warn">D-4</span>校園映像的分頁——前台跟後台是兩套完全不同的實作</h3>
+      <ol>
+        <li><b>前台</b>（<code class="path">index.php</code> 內的 <span class="mono">pp(x)</span>）：頁面一次把 <b>所有</b>圖片都輸出到 HTML（每張包一層 <span class="mono">&lt;div id="ssaa{index}"&gt;</span>），JS 只是靠 <span class="mono">nowpage</span> 變數算出目前該顯示哪 3 個 id，其餘全部 <span class="mono">.hide()</span>——<b>完全沒有跟後端要資料，是純前端顯示/隱藏</b>。</li>
+        <li><b>後台</b>（<code class="path">back/image.php</code>、以及同樣寫法的 <code class="path">back/news.php</code>）：用 SQL 的 <span class="mono">limit $start,$div</span> 每次只撈這一頁需要的列數，換頁時是<b>重新整頁跟資料庫要新的一批資料</b>，頁碼連結用 <span class="mono">?do=$do&amp;p=$i</span> 這種傳統 GET 分頁。</li>
+        <li>判斷用哪一種的原則：<b>資料量小、不會一直變動、想要滑順切換</b>（像首頁固定展示的校園映像）用第一種純前端寫法；<b>資料筆數不確定、後台要管理增刪</b>（列表型管理頁）用第二種 SQL LIMIT 分頁——這條原則跟 Q2 學習地圖 D-2 的「固定內容用前端 show/hide、變動內容才用 AJAX」是同一個思考方式的延伸。</li>
+      </ol>
+    </div>
+  </section>
+
+  <section id="db">
+    <div class="sec-head"><span class="sec-num">E</span><h2>資料庫結構（db21.sql）</h2></div>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>資料表</th><th>欄位</th><th>用途</th></tr></thead>
+        <tbody>
+          <tr><td><code class="path">title</code></td><td><span class="mono">img</span>／<span class="mono">text</span>／<span class="mono">sh</span></td><td>網站標題圖片＋替代文字，<span class="mono">sh</span> 用單選概念（同時只有一列該是 1）</td></tr>
+          <tr><td><code class="path">ad</code></td><td><span class="mono">text</span>／<span class="mono">sh</span></td><td>動態文字廣告，<span class="mono">sh=1</span> 才會被跑馬燈撈出來顯示</td></tr>
+          <tr><td><code class="path">mvim</code></td><td><span class="mono">img</span>／<span class="mono">sh</span></td><td>動畫輪播用的 gif 檔名</td></tr>
+          <tr><td><code class="path">image</code></td><td><span class="mono">img</span>／<span class="mono">sh</span></td><td>校園映像圖片</td></tr>
+          <tr><td><code class="path">news</code></td><td><span class="mono">text</span>／<span class="mono">sh</span></td><td>最新消息內容（評分前需匯入至少 6 筆，目前是空表）</td></tr>
+          <tr><td><code class="path">admin</code></td><td><span class="mono">acc</span>／<span class="mono">pw</span>（明碼）</td><td>後台管理帳號，預設應含 <span class="mono">admin/1234</span>（目前空表，要自己補一筆）</td></tr>
+          <tr><td><code class="path">menu</code></td><td><span class="mono">href</span>／<span class="mono">text</span>／<span class="mono">sh</span>／<span class="mono">main_id</span></td><td>主／次選單共用一張表，<span class="mono">main_id=0</span> 是主選單本身，其餘 <span class="mono">main_id</span> 指向所屬主選單 id（目前空表，要自己補 2 主 1 次）</td></tr>
+          <tr><td><code class="path">total</code></td><td><span class="mono">total</span></td><td>累積進站人數，永遠只用 <span class="mono">id=1</span> 這一列（沒有日期欄）</td></tr>
+          <tr><td><code class="path">bottom</code></td><td><span class="mono">bottom</span></td><td>頁尾版權文字，永遠只用 <span class="mono">id=1</span> 這一列</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="callout warn">
+      <b>動手前先補資料：</b>匯入 <span class="mono">db21.sql</span> 後，<span class="mono">news</span>、<span class="mono">admin</span>、<span class="mono">menu</span> 都是空表——題本明講「評分前」要先手動建好最新消息 6 筆、管理者帳號 admin/1234、主選單「管理登入」＋「網站首頁」與其下次選單「更多內容」，這些是應檢人操作步驟，不是程式沒寫。
+    </div>
+  </section>
+
+  <section id="steps">
+    <div class="sec-head"><span class="sec-num">F</span><h2>第一次做這題？建議照這個順序動手（不是照題本順序）</h2></div>
+    <p class="lede" style="margin-bottom:16px;">題本是照「畫面由上到下」排的，但實際刻的時候照這個順序，會先摸熟共用骨架，後面每一區塊都是複製貼上改欄位，速度會快很多。</p>
+    <ol class="steps">
+      <li><b>環境先行：</b>把整包丟進 XAMPP 站台根目錄，匯入 <span class="mono">db21.sql</span>（正式應檢要把庫名跟 <span class="mono">webXX</span> 資料夾都改成自己的崗位號碼），確認 <span class="mono">http://127.0.0.1</span> 打得開。</li>
+      <li><b>讀懂骨架，不要先寫畫面：</b>先看 <code class="path">api/db.php</code> 的 <span class="mono">DB</span> 類別（all/count/find/save/del 五個方法）＋最下面九個 <span class="mono">new DB(...)</span>——這是全站唯一的資料存取邏輯，看懂這支等於看懂 70% 的後台。</li>
+      <li><b>做最簡單的一組先驗證流程：</b>挑「頁尾版權區」（動作要求八）練手——只有一個欄位、一個表單、後台 <code class="path">back/bottom.php</code> 直接 post 到 <code class="path">api/edit_value.php</code>，做完能馬上驗證「前台 index.php 顯示 → 後台改 → 前台馬上變」這條完整迴路有沒有通。</li>
+      <li><b>複製同一個模式做「單欄位」的區塊：</b>依樣畫葫蘆做「進站總人數」（動作要求七，一樣走 <span class="mono">edit_value.php</span>），這兩個做完你會很熟悉「顯示→表單→api 更新」這條線。</li>
+      <li><b>進階到「有清單＋新增／刪除」的區塊：</b>做「動態文字廣告」（動作要求四）——這組會讓你碰到 <code class="path">api/add.php</code>（新增）跟 <code class="path">api/edit.php</code>（批次改內容＋批次刪除的 checkbox 陣列寫法），這兩支之後全部表都共用，一定要弄懂。</li>
+      <li><b>複製上一步的模式，加上「上傳圖片」：</b>依序做「網站標題區」（動作要求三，注意單選顯示的 radio 寫法）、「動畫圖片輪播區」（動作要求五）、「校園映像區」（動作要求六，注意前台 <span class="mono">pp(x)</span> 跟後台 <span class="mono">limit</span> 分頁是兩套邏輯，見 D-4）——這三組都要多處理 <span class="mono">$_FILES</span> 上傳跟「更新圖片」的獨立小表單。</li>
+      <li><b>做「有分頁＋彈出視窗」的區塊：</b>「最新消息區」（動作要求九）——先把 <code class="path">front/main.php</code> 首頁 5 則＋hover 彈窗做出來，再做 <code class="path">front/news.php</code> 的「更多」分頁頁面，兩支頁面的分頁與彈窗程式碼幾乎可以整段複製。</li>
+      <li><b>做會員／登入相關：</b>「管理登入按鈕」（動作要求十）＋「管理者帳號管理」（動作要求十一）——記得補上 D-2 提到的 <span class="mono">admin.php</span> session 保護跟真正的登出，這是示範專案沒做完整、但你自己刻時應該補上的部分。</li>
+      <li><b>最後做最複雜的「選單管理」：</b>（動作要求十二）——這是全題本邏輯最繞的一塊（主／次選單同表、<span class="mono">main_id</span> 父子關係、動態新增選項列），放在最後做，因為前面七步已經讓你熟悉 add/edit 的套路，這裡只是多一層「父子關係」要處理。</li>
+      <li><b>收尾：</b>手動補資料（news 6 筆、admin 帳密、menu 2 主 1 次）、跑一次資料備份清單、對照題本「評分標準以動作要求為準」逐條自我檢查一次。</li>
+    </ol>
+  </section>
+
+  <footer class="note">
+    參考格式：<code class="path">Q2-pra/Q2學習地圖.html</code>。程式碼對照範圍：<code class="path">D:\Developer\projects\FallDevCourse\11501-BQUIZ01</code>（老師示範專案，資料庫 <span class="mono">db21</span>）。原始素材：<code class="path">11501-BQUIZ01\102201</code>。題本頁碼對照：本文件 PDF 印刷頁碼 19–36（試題編號 17300-102201）。
+  </footer>
+
+</div>
+
+</body>
+</html>

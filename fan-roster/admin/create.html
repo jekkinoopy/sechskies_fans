@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="zh-TW">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>新增粉絲資料｜水晶男孩推廣部 Admin</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+  <link rel="stylesheet" href="../../css/style.css">
+</head>
+
+<body>
+
+  <nav class="navbar navbar-expand navbar-dark sk-navbar">
+    <div class="container-fluid">
+      <span class="navbar-brand mb-0"><i class="bi bi-gem me-1"></i>水晶男孩推廣部 <span class="fw-light">Admin</span></span>
+      <div class="d-flex gap-2">
+        <a class="btn btn-brand btn-sm" href="../index.html">回前台</a>
+        <a class="btn btn-outline-brand btn-sm" href="../../practice-room.html">回水晶練習室</a>
+      </div>
+    </div>
+  </nav>
+
+  <div class="container-fluid">
+    <div class="row">
+
+      <aside class="col-lg-2 border-end sk-admin-sidebar py-4 px-3 min-vh-100">
+        <nav class="nav flex-column">
+          <a class="nav-link active" href="index.html"><i class="bi bi-person-hearts me-2"></i>粉絲名單管理</a>
+          <a class="nav-link disabled" href="#" aria-disabled="true"><i class="bi bi-megaphone me-2"></i>應援活動管理</a>
+          <a class="nav-link disabled" href="#" aria-disabled="true"><i class="bi bi-envelope me-2"></i>聯絡資訊管理</a>
+        </nav>
+      </aside>
+
+      <main class="col-lg-10 py-4 px-4">
+        <h1 class="h3 mb-4 text-white">新增粉絲資料</h1>
+
+        <div class="card sk-card sk-surface p-4" style="max-width: 42rem;">
+          <form>
+            <div class="row g-3">
+
+              <div class="col-md-6">
+                <label for="fanNickname" class="form-label">暱稱</label>
+                <input type="text" class="form-control" id="fanNickname" placeholder="例如：黃色氣球">
+              </div>
+
+              <div class="col-md-6">
+                <label for="fanSince" class="form-label">入坑時間</label>
+                <input type="text" class="form-control" id="fanSince" placeholder="例如：20TH（2016）">
+              </div>
+
+              <div class="col-12">
+                <label for="fanItems" class="form-label">應援物</label>
+                <input type="text" class="form-control" id="fanItems" placeholder="以頓號分隔，例如：手燈、初回版專輯、演唱會團服">
+              </div>
+
+              <div class="col-12">
+                <label for="fanStory" class="form-label">應援事蹟</label>
+                <textarea class="form-control" id="fanStory" rows="4" placeholder="這位粉絲留下的應援故事或貢獻……"></textarea>
+              </div>
+
+              <div class="col-md-6">
+                <label for="fanStatus" class="form-label">狀態</label>
+                <select class="form-select" id="fanStatus">
+                  <option value="draft">草稿</option>
+                  <option value="published" selected>公開</option>
+                </select>
+              </div>
+
+            </div>
+
+            <div class="d-flex gap-2 mt-4">
+              <button type="submit" class="btn btn-brand">儲存</button>
+              <a class="btn btn-outline-brand" href="index.html">取消</a>
+            </div>
+          </form>
+        </div>
+
+      </main>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+
+</html>
