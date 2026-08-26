@@ -264,6 +264,7 @@ body::after {
 .badge-type--rap     { background: rgba(110, 114, 121, 0.30); color: #b7bac0; border-color: rgba(110, 114, 121, 0.55); }
 .badge-type--stage   { background: var(--sk-text); color: #1a1a1a; border-color: var(--sk-text); }
 .badge-type--fitness { background: rgba(150, 154, 161, 0.16); color: #c4c7cd; border-color: rgba(150, 154, 161, 0.4); }
+.badge-type--finance { background: rgba(196, 168, 108, 0.16); color: #d9c294; border-color: rgba(196, 168, 108, 0.45); }
 
 /* ============ 完成狀態徽章 ============ */
 .badge-status {

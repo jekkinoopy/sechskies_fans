@@ -1,0 +1,783 @@
+<!doctype html>
+<html lang="zh-TW">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>sechskies_fans｜水晶財務部</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+  <link rel="stylesheet" href="../css/style.css">
+  <style>
+    /* 頁面專屬微調：共用版型沒覆蓋到的 Bootstrap 元件（表格吸頂、警示、載入動畫、損益色） */
+    .table-container {
+      max-height: 550px;
+      overflow-y: auto;
+    }
+
+    .table-container thead th {
+      position: sticky;
+      top: 0;
+      z-index: 2;
+    }
+
+    .card-header {
+      background-color: transparent !important;
+      border-bottom-color: var(--sk-border) !important;
+    }
+
+    .stat-value {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: #fff;
+    }
+
+    .stat-mini {
+      background-color: var(--sk-surface-soft);
+      border: 1px solid var(--sk-border);
+      border-radius: 0.6rem;
+    }
+
+    .text-profit {
+      color: #ff8a94;
+    }
+
+    .text-loss {
+      color: #6ee7b7;
+    }
+
+    #loading-spinner .spinner-border {
+      color: var(--sk-secondary);
+    }
+
+    #error-alert {
+      background-color: rgba(226, 16, 43, 0.14);
+      border: 1px solid rgba(226, 16, 43, 0.4);
+      color: #ffb4bb;
+    }
+
+    .quick-amount-btn.active,
+    .quick-date-btn.active {
+      background: var(--sk-red-gradient);
+      border-color: transparent;
+      color: #fff;
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- 共用導覽列 -->
+  <nav class="navbar navbar-expand-lg navbar-dark sk-navbar sticky-top">
+    <div class="container">
+      <a class="navbar-brand" href="../practice-room.html"><i class="bi bi-gem me-1"></i>小黃同樂會 －YELLOWKIES FESTIVAL</a>
+      <div class="d-flex gap-2">
+        <a class="btn btn-outline-brand btn-sm" href="../practice-room.html">水晶練習室</a>
+        <a class="btn btn-outline-brand btn-sm" href="../admin/login.php">後台管理</a>
+      </div>
+    </div>
+  </nav>
+
+  <canvas id="particles"></canvas>
+
+  <main class="container py-5">
+
+    <div class="text-center mb-5">
+      <span class="eyebrow mb-3">小黃同樂會・SECHSKIES FINANCE DEPT</span>
+      <h1 class="display-5 fw-bold text-white mt-3 mb-0">水晶財務部</h1>
+      <span class="sub-title">有錢才能衝演唱會！！</span>
+      <p class="lead text-body-secondary mt-4 mx-auto" style="max-width: 640px;">
+        想存錢衝演唱會、買週邊、飛韓國？水晶財務部幫你算算看：選一檔標的、多久存一次、每次存多少，試算如果早點開始存，現在能存出多少「追星基金」。
+      </p>
+      <div class="d-flex flex-wrap justify-content-center gap-2 mt-3">
+        <span class="chip"><i class="bi bi-graph-up-arrow" aria-hidden="true"></i> 存錢作戰計畫</span>
+        <span class="chip"><i class="bi bi-piggy-bank-fill" aria-hidden="true"></i> 追星基金</span>
+        <span class="badge badge-type badge-type--finance">財務</span>
+      </div>
+    </div>
+
+    <!-- 1. container-input -->
+    <div class="container-input mb-4" id="container-input">
+      <div class="card sk-card sk-surface">
+        <div class="card-header py-3 border-bottom">
+          <h5 class="card-title mb-0 fw-bold text-white">
+            <i class="bi bi-sliders2-vertical me-2"></i>1. 存錢作戰設定
+          </h5>
+        </div>
+        <div class="card-body p-4">
+          <form id="backtest-form">
+            <div class="row g-3">
+              <!-- 1-1 標的選擇 -->
+              <div class="col-md-4 col-sm-6">
+                <label for="stock-select" class="form-label fw-semibold">
+                  <i class="bi bi-tag-fill me-1"></i>1-1 想存哪一檔
+                </label>
+                <select class="form-select" id="stock-select" name="stock">
+                  <option value="0050" selected>0050（元大台灣50）</option>
+                  <option value="voo">VOO（Vanguard S&amp;P 500 ETF）</option>
+                  <option value="qqq">QQQ（Invesco QQQ Trust）</option>
+                </select>
+              </div>
+
+              <!-- 1-2 策略選擇 -->
+              <div class="col-md-4 col-sm-6">
+                <label for="strategy-select" class="form-label fw-semibold">
+                  <i class="bi bi-diagram-3-fill me-1"></i>1-2 多久存一次
+                </label>
+                <select class="form-select" id="strategy-select" name="strategy">
+                  <option value="single">1. 一次梭哈（一開始就全部存進去）</option>
+                  <option value="yearly">2. 每年存一次</option>
+                  <option value="quarterly">3. 每一季存一次</option>
+                  <option value="monthly" selected>4. 每個月存一次</option>
+                </select>
+              </div>
+
+              <!-- 1-3 投資金額 -->
+              <div class="col-md-4 col-sm-12">
+                <label for="invest-amount"
+                  class="form-label fw-semibold d-flex justify-content-between align-items-center">
+                  <span><i class="bi bi-currency-dollar me-1"></i>1-3 每次存多少</span>
+                  <span class="text-body-secondary small fw-normal">每次要拿出來的錢</span>
+                </label>
+                <div class="input-group">
+                  <span class="input-group-text">$</span>
+                  <input type="number" class="form-control" id="invest-amount" name="amount" value="10000" min="1"
+                    step="any" placeholder="請輸入金額，例如：10000" required>
+                </div>
+                <div class="d-flex gap-1 mt-2 flex-wrap">
+                  <button type="button" class="btn btn-outline-brand btn-sm py-0 px-2 quick-amount-btn"
+                    data-amount="3000">$3千</button>
+                  <button type="button" class="btn btn-outline-brand btn-sm py-0 px-2 quick-amount-btn"
+                    data-amount="5000">$5千</button>
+                  <button type="button" class="btn btn-outline-brand btn-sm py-0 px-2 quick-amount-btn"
+                    data-amount="10000">$1萬</button>
+                  <button type="button" class="btn btn-outline-brand btn-sm py-0 px-2 quick-amount-btn"
+                    data-amount="30000">$3萬</button>
+                  <button type="button" class="btn btn-outline-brand btn-sm py-0 px-2 quick-amount-btn"
+                    data-amount="50000">$5萬</button>
+                </div>
+              </div>
+
+              <!-- 1-4 起始日期 -->
+              <div class="col-md-4 col-sm-6">
+                <label for="start-date" class="form-label fw-semibold">
+                  <i class="bi bi-calendar-event me-1"></i>1-4 起始日期
+                </label>
+                <input type="date" class="form-control" id="start-date" name="startDate" required>
+              </div>
+
+              <!-- 1-5 結束日期 -->
+              <div class="col-md-4 col-sm-6">
+                <label for="end-date" class="form-label fw-semibold">
+                  <i class="bi bi-calendar-check me-1"></i>1-5 結束日期
+                </label>
+                <input type="date" class="form-control" id="end-date" name="endDate" required>
+              </div>
+
+              <!-- 1-6 Submit 送出按鈕 -->
+              <div class="col-md-4 col-sm-12 d-flex align-items-end">
+                <button type="submit" class="btn btn-brand w-100 py-2" id="btn-submit">
+                  <i class="bi bi-play-circle-fill me-1"></i> 1-6 算給我看！
+                </button>
+              </div>
+            </div>
+
+            <!-- 快速日期選擇與交易價設定 -->
+            <div class="row mt-3 pt-3 border-top g-2 align-items-center"
+              style="border-color: var(--sk-border) !important;">
+              <div class="col-md-8 d-flex flex-wrap gap-1 align-items-center">
+                <span class="text-body-secondary small me-2"><i class="bi bi-clock-history me-1"></i>快速區間：</span>
+                <button type="button" class="btn btn-outline-brand btn-sm py-0 px-2 quick-date-btn" data-years="1">近 1
+                  年</button>
+                <button type="button" class="btn btn-outline-brand btn-sm py-0 px-2 quick-date-btn" data-years="3">近 3
+                  年</button>
+                <button type="button" class="btn btn-outline-brand btn-sm py-0 px-2 quick-date-btn" data-years="5">近 5
+                  年</button>
+                <button type="button" class="btn btn-outline-brand btn-sm py-0 px-2 quick-date-btn" data-years="10">近 10
+                  年</button>
+                <button type="button" class="btn btn-outline-brand btn-sm py-0 px-2 quick-date-btn"
+                  data-years="all">全部歷史</button>
+              </div>
+              <div class="col-md-4 text-md-end text-body-secondary small">
+計算方式：<span class="chip">用當天剛開盤的價格算</span>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <!-- 2. container-output -->
+    <div class="container-output mb-4" id="container-output">
+
+      <!-- 載入中狀態 -->
+      <div id="loading-spinner" class="card sk-card sk-surface py-5 text-center d-none">
+        <div class="spinner-border mx-auto" role="status" style="width: 3rem; height: 3rem;">
+          <span class="visually-hidden">載入中...</span>
+        </div>
+        <p class="mt-3 text-body-secondary">正在幫你試算存錢成果，請稍候...</p>
+      </div>
+
+      <!-- 錯誤訊息提示 -->
+      <div id="error-alert" class="alert d-none rounded-3" role="alert">
+        <i class="bi bi-exclamation-triangle-fill me-2 fs-5"></i>
+        <span id="error-message">無法載入資料，請確認檔案與日期範圍。</span>
+      </div>
+
+      <!-- 回測結果內容區域 -->
+      <div id="results-content">
+
+        <!-- 2-1 交易相關資訊 & 投報率相關數據 -->
+        <div class="card sk-card sk-surface mb-4">
+          <div class="card-header py-3 d-flex flex-wrap justify-content-between align-items-center gap-2 border-bottom">
+            <h5 class="card-title mb-0 fw-bold text-white">
+              <i class="bi bi-pie-chart-fill me-2"></i>2-1 存了多少・現在值多少
+            </h5>
+            <div class="d-flex gap-2">
+              <span class="chip" id="badge-stock-name">0050</span>
+              <span class="chip" id="badge-strategy-name">每月第一個交易日</span>
+            </div>
+          </div>
+          <div class="card-body p-4">
+            <div class="row g-3">
+              <!-- 總投入成本 -->
+              <div class="col-lg-3 col-md-6">
+                <div class="stat-mini p-3 h-100">
+                  <div class="text-body-secondary small fw-bold text-uppercase">總共存了多少</div>
+                  <div class="stat-value mt-1" id="stat-total-invested">$0</div>
+                  <div class="small text-body-secondary mt-1">
+                    存了幾次：<span class="fw-bold text-white" id="stat-trade-count">0</span> 次
+                  </div>
+                </div>
+              </div>
+
+              <!-- 期末資產總值 -->
+              <div class="col-lg-3 col-md-6">
+                <div class="stat-mini p-3 h-100">
+                  <div class="text-body-secondary small fw-bold text-uppercase">現在總共值多少</div>
+                  <div class="stat-value mt-1" id="stat-final-value">$0</div>
+                  <div class="small text-body-secondary mt-1">
+                    現在股價：<span class="fw-bold text-white" id="stat-final-price">$0</span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- 總損益金額 -->
+              <div class="col-lg-3 col-md-6">
+                <div class="stat-mini p-3 h-100">
+                  <div class="text-body-secondary small fw-bold text-uppercase">賺了多少（賠了多少）</div>
+                  <div class="stat-value mt-1" id="stat-total-profit">$0</div>
+                  <div class="small text-body-secondary mt-1">
+                    平均買在多少錢：<span class="fw-bold text-white" id="stat-avg-cost">$0</span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- 總報酬率 & 年化報酬率 -->
+              <div class="col-lg-3 col-md-6">
+                <div class="stat-mini p-3 h-100">
+                  <div class="text-body-secondary small fw-bold text-uppercase">賺了幾 %</div>
+                  <div class="stat-value mt-1" id="stat-roi-percent">0.00%</div>
+                  <div class="small text-body-secondary mt-1">
+                    平均一年賺幾 %：<span class="fw-bold" id="stat-cagr-percent">0.00%</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- 補充詳細指標列 -->
+            <div class="row g-2 mt-2 pt-3 border-top text-body-secondary small"
+              style="border-color: var(--sk-border) !important;">
+              <div class="col-sm-6 col-md-3">
+                <i class="bi bi-box-seam me-1"></i>總共買了幾股：<strong class="text-white" id="stat-total-shares">0</strong>
+                股
+              </div>
+              <div class="col-sm-6 col-md-3">
+                <i class="bi bi-calendar-range me-1"></i>存了幾年：<strong class="text-white"
+                  id="stat-period-years">0</strong> 年
+              </div>
+              <div class="col-sm-6 col-md-3">
+                <i class="bi bi-calendar3 me-1"></i>第一次存錢：<strong class="text-white" id="stat-first-trade">-</strong>
+              </div>
+              <div class="col-sm-6 col-md-3">
+                <i class="bi bi-calendar-check me-1"></i>最後一次存錢：<strong class="text-white"
+                  id="stat-last-trade">-</strong>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 2-2 有成交的 Table 資料 -->
+        <div class="card sk-card sk-surface">
+          <div class="card-header py-3 d-flex flex-wrap justify-content-between align-items-center gap-2 border-bottom">
+            <h5 class="card-title mb-0 fw-bold text-white">
+              <i class="bi bi-table me-2"></i>2-2 每一筆存錢紀錄
+            </h5>
+            <span class="chip" id="table-record-count">共存了 0 次</span>
+          </div>
+          <div class="card-body p-0">
+            <div class="table-responsive table-container">
+              <table class="table table-striped table-hover mb-0 align-middle">
+                <thead>
+                  <tr>
+                    <th scope="col" class="text-center" style="width: 70px;">第幾次</th>
+                    <th scope="col" class="text-center" style="width: 120px;">日期</th>
+                    <th scope="col" class="text-end">那天股價</th>
+                    <th scope="col" class="text-end">存了多少</th>
+                    <th scope="col" class="text-end">買到幾股</th>
+                    <th scope="col" class="text-end">累計存了多少</th>
+                    <th scope="col" class="text-end">累計有幾股</th>
+                    <th scope="col" class="text-end">當時股價</th>
+                    <th scope="col" class="text-end">當時值多少</th>
+                  </tr>
+                </thead>
+                <tbody id="trades-table-tbody">
+                  <!-- 動態注入成交明細 -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- 版權聲明 -->
+    <section>
+      <div class="card sk-card sk-surface p-4">
+        <p class="text-body-secondary small mb-0">
+          這頁是粉絲自己做好玩的非商業作品，存錢試算只是好玩用途，不是投資建議喔；以前賺錢不代表以後也會賺，想清楚再存錢追星！
+        </p>
+      </div>
+    </section>
+
+  </main>
+
+  <footer>
+    <p>SECHSKIES Fanpage &copy; 2026 - 黃色氣球永遠飄揚</p>
+    <a href="https://jekkinoopy.github.io/Portfolio/" class="studio-link" target="_blank" rel="noopener noreferrer">
+      Design by <span class="mark_b">Jekkinoopy Studio</span>
+    </a>
+  </footer>
+
+  <!-- jQuery（回測引擎使用） -->
+  <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="../assets/js/particles.js"></script>
+
+  <script>
+    $(document).ready(function () {
+      // 暫存各股票載入的原始資料快取
+      var stockDataCache = {};
+      var currentStockRawData = [];
+
+      // 策略名稱映射表
+      var strategyNames = {
+        'single': '一次梭哈',
+        'yearly': '每年存一次',
+        'quarterly': '每一季存一次',
+        'monthly': '每個月存一次'
+      };
+
+      // 數值格式化工具函數
+      function formatMoney(num) {
+        if (num === null || num === undefined || isNaN(num)) return '$0';
+        return '$' + Number(num).toLocaleString(undefined, { minimumFractionDigits: 0, maximumFractionDigits: 2 });
+      }
+
+      function formatShares(num) {
+        if (num === null || num === undefined || isNaN(num)) return '0';
+        return Number(num).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 4 });
+      }
+
+      function formatPrice(num) {
+        if (num === null || num === undefined || isNaN(num)) return '$0.00';
+        return '$' + Number(num).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+      }
+
+      // XIRR（內部年化報酬率）計算
+      function calculateXIRR(cashFlows, dates) {
+        if (!cashFlows || cashFlows.length < 2) return 0;
+
+        var d0 = new Date(dates[0]);
+        var maxIter = 100;
+        var tol = 1e-6;
+        var r = 0.1; // 初始猜測利率 10%
+
+        for (var iter = 0; iter < maxIter; iter++) {
+          var fValue = 0;
+          var fDerivative = 0;
+
+          for (var i = 0; i < cashFlows.length; i++) {
+            var di = new Date(dates[i]);
+            var t = (di - d0) / (365.25 * 24 * 60 * 60 * 1000);
+            var discount = Math.pow(1 + r, t);
+
+            if (discount === 0 || isNaN(discount)) continue;
+
+            fValue += cashFlows[i] / discount;
+            fDerivative -= (t * cashFlows[i]) / (discount * (1 + r));
+          }
+
+          if (Math.abs(fDerivative) < 1e-10) break;
+
+          var newR = r - fValue / fDerivative;
+          if (isNaN(newR) || !isFinite(newR)) break;
+
+          if (Math.abs(newR - r) < tol) {
+            return newR;
+          }
+          r = newR;
+        }
+
+        // 若無收斂，使用簡單 CAGR 近似
+        var totalIn = 0;
+        for (var j = 0; j < cashFlows.length - 1; j++) {
+          totalIn += Math.abs(cashFlows[j]);
+        }
+        var finalV = cashFlows[cashFlows.length - 1];
+        var totalYears = (new Date(dates[dates.length - 1]) - d0) / (365.25 * 24 * 60 * 60 * 1000);
+        if (totalYears > 0 && totalIn > 0 && finalV > 0) {
+          return Math.pow(finalV / totalIn, 1 / totalYears) - 1;
+        }
+        return 0;
+      }
+
+      // 載入股票 JSON 資料
+      function fetchStockData(stock, callback) {
+        if (stockDataCache[stock]) {
+          currentStockRawData = stockDataCache[stock];
+          if (callback) callback(currentStockRawData);
+          return;
+        }
+
+        var jsonUrl = './data/' + stock + '.json';
+        $('#loading-spinner').removeClass('d-none');
+        $('#results-content').addClass('d-none');
+        $('#error-alert').addClass('d-none');
+
+        $.ajax({
+          url: jsonUrl,
+          type: 'GET',
+          dataType: 'json',
+          cache: false,
+          success: function (data) {
+            $('#loading-spinner').addClass('d-none');
+            if (!Array.isArray(data) || data.length === 0) {
+              showError('檔案格式錯誤或查無數據（' + jsonUrl + '）');
+              return;
+            }
+            stockDataCache[stock] = data;
+            currentStockRawData = data;
+            if (callback) callback(data);
+          },
+          error: function (xhr, status, error) {
+            $('#loading-spinner').addClass('d-none');
+            showError('讀取資料檔案失敗（' + jsonUrl + '）：' + (error || status || '請確認本地伺服器或檔案路徑'));
+          }
+        });
+      }
+
+      // 初始化或更新日期選擇器範圍
+      function updateDateInputs(data, resetToDefault) {
+        if (!data || data.length === 0) return;
+        var minDate = data[0].time;
+        var maxDate = data[data.length - 1].time;
+
+        $('#start-date').attr('min', minDate).attr('max', maxDate);
+        $('#end-date').attr('min', minDate).attr('max', maxDate);
+
+        if (resetToDefault || !$('#start-date').val() || !$('#end-date').val()) {
+          $('#start-date').val(minDate);
+          $('#end-date').val(maxDate);
+        } else {
+          // 若目前填寫的日期超出範圍，進行校正
+          if ($('#start-date').val() < minDate) $('#start-date').val(minDate);
+          if ($('#start-date').val() > maxDate) $('#start-date').val(minDate);
+          if ($('#end-date').val() > maxDate) $('#end-date').val(maxDate);
+          if ($('#end-date').val() < minDate) $('#end-date').val(maxDate);
+        }
+      }
+
+      function showError(msg) {
+        $('#error-message').text(msg);
+        $('#error-alert').removeClass('d-none');
+        $('#results-content').addClass('d-none');
+        $('#loading-spinner').addClass('d-none');
+      }
+
+      // 執行策略回測計算
+      function runBacktest() {
+        var stock = $('#stock-select').val();
+        var strategy = $('#strategy-select').val();
+        var rawAmount = String($('#invest-amount').val()).replace(/[^\d.]/g, '').trim();
+        var investAmount = parseFloat(rawAmount);
+        var startDateStr = $('#start-date').val();
+        var endDateStr = $('#end-date').val();
+
+        if (isNaN(investAmount) || investAmount <= 0) {
+          alert('請輸入有效的投資金額（需大於 0）！');
+          $('#invest-amount').focus();
+          return;
+        }
+
+        if (!startDateStr || !endDateStr) {
+          alert('請選擇起始與結束日期！');
+          return;
+        }
+
+        if (startDateStr > endDateStr) {
+          alert('起始日期不可大於結束日期！');
+          return;
+        }
+
+        fetchStockData(stock, function (data) {
+          // 1. 根據使用者設定的日期範圍篩選資料
+          var filteredData = data.filter(function (item) {
+            return item.time >= startDateStr && item.time <= endDateStr;
+          });
+
+          if (filteredData.length === 0) {
+            showError('在所選的日期區間（' + startDateStr + ' ~ ' + endDateStr + '）內無任何交易資料，請調整日期範圍。');
+            return;
+          }
+
+          $('#error-alert').addClass('d-none');
+          $('#results-content').removeClass('d-none');
+
+          // 2. 策略成交過濾
+          var trades = [];
+          var totalInvested = 0;
+          var totalShares = 0;
+
+          var lastYear = null;
+          var lastYearQuarter = null;
+          var lastYearMonth = null;
+
+          $.each(filteredData, function (idx, bar) {
+            var isTradeDay = false;
+            // 透過字串解析年月，避免時區造成的位移
+            var parts = bar.time.split('-');
+            var year = parseInt(parts[0], 10);
+            var month = parseInt(parts[1], 10); // 1 ~ 12
+            var quarter = Math.ceil(month / 3); // 1 ~ 4
+
+            var yearKey = year;
+            var quarterKey = year + '-Q' + quarter;
+            var monthKey = year + '-' + (month < 10 ? '0' + month : month);
+
+            if (strategy === 'single') {
+              // 單筆投資：只在區間內第一筆資料成交
+              if (idx === 0) {
+                isTradeDay = true;
+              }
+            } else if (strategy === 'yearly') {
+              // 每年第一個交易日
+              if (lastYear !== yearKey) {
+                isTradeDay = true;
+                lastYear = yearKey;
+              }
+            } else if (strategy === 'quarterly') {
+              // 每季第一個交易日
+              if (lastYearQuarter !== quarterKey) {
+                isTradeDay = true;
+                lastYearQuarter = quarterKey;
+              }
+            } else if (strategy === 'monthly') {
+              // 每月第一個交易日
+              if (lastYearMonth !== monthKey) {
+                isTradeDay = true;
+                lastYearMonth = monthKey;
+              }
+            }
+
+            if (isTradeDay) {
+              // 買進成交價採用 open（開盤價）
+              var buyPrice = bar.open !== undefined ? bar.open : bar.close;
+              var sharesBought = investAmount / buyPrice;
+
+              totalInvested += investAmount;
+              totalShares += sharesBought;
+
+              var closePrice = bar.close !== undefined ? bar.close : buyPrice;
+              var currentPortfolioValue = totalShares * closePrice;
+
+              trades.push({
+                index: trades.length + 1,
+                time: bar.time,
+                buyPrice: buyPrice,
+                investAmount: investAmount,
+                sharesBought: sharesBought,
+                cumInvested: totalInvested,
+                cumShares: totalShares,
+                closePrice: closePrice,
+                portfolioValue: currentPortfolioValue
+              });
+            }
+          });
+
+          if (trades.length === 0) {
+            showError('依據此策略在該區間內無符合條件之成交日。');
+            return;
+          }
+
+          // 3. 計算投報率與期末各項統計數據
+          var lastBar = filteredData[filteredData.length - 1];
+          var finalPrice = lastBar.close !== undefined ? lastBar.close : lastBar.open;
+          var finalPortfolioValue = totalShares * finalPrice;
+          var totalProfit = finalPortfolioValue - totalInvested;
+          var roiPercent = (totalProfit / totalInvested) * 100;
+          var avgCost = totalInvested / totalShares;
+
+          // 計算持有年數與 XIRR
+          var startDateObj = new Date(trades[0].time);
+          var endDateObj = new Date(lastBar.time);
+          var periodYears = (endDateObj - startDateObj) / (365.25 * 24 * 60 * 60 * 1000);
+          if (periodYears < 0.01) periodYears = 0.01;
+
+          // 建構 XIRR 現金流
+          var cashFlows = [];
+          var cashFlowDates = [];
+          trades.forEach(function (t) {
+            cashFlows.push(-t.investAmount);
+            cashFlowDates.push(t.time);
+          });
+          // 期末收回資產
+          cashFlows.push(finalPortfolioValue);
+          cashFlowDates.push(lastBar.time);
+
+          var xirrRate = calculateXIRR(cashFlows, cashFlowDates);
+          var xirrPercent = xirrRate * 100;
+
+          // 4. 更新 2-1 統計指標 UI
+          $('#badge-stock-name').text(stock.toUpperCase());
+          $('#badge-strategy-name').text(strategyNames[strategy]);
+
+          $('#stat-total-invested').text(formatMoney(totalInvested));
+          $('#stat-trade-count').text(trades.length.toLocaleString());
+
+          $('#stat-final-value').text(formatMoney(finalPortfolioValue));
+          $('#stat-final-price').text(formatPrice(finalPrice));
+
+          // 總損益顏色與正負號
+          var profitSign = totalProfit >= 0 ? '+' : '';
+          var profitColorClass = totalProfit >= 0 ? 'text-profit' : 'text-loss';
+          $('#stat-total-profit')
+            .text(profitSign + formatMoney(totalProfit))
+            .removeClass('text-profit text-loss')
+            .addClass(profitColorClass);
+
+          $('#stat-avg-cost').text(formatPrice(avgCost));
+
+          // ROI & CAGR 樣式
+          var roiSign = roiPercent >= 0 ? '+' : '';
+          $('#stat-roi-percent')
+            .text(roiSign + roiPercent.toFixed(2) + '%')
+            .removeClass('text-profit text-loss')
+            .addClass(profitColorClass);
+
+          var cagrSign = xirrPercent >= 0 ? '+' : '';
+          $('#stat-cagr-percent')
+            .text(cagrSign + xirrPercent.toFixed(2) + '%')
+            .removeClass('text-profit text-loss')
+            .addClass(profitColorClass);
+
+          $('#stat-total-shares').text(formatShares(totalShares));
+          $('#stat-period-years').text(periodYears.toFixed(2));
+          $('#stat-first-trade').text(trades[0].time);
+          $('#stat-last-trade').text(trades[trades.length - 1].time);
+
+          // 5. 更新 2-2 有成交的 Table 資料
+          $('#table-record-count').text('共存了 ' + trades.length.toLocaleString() + ' 次');
+
+          var rowsHtml = '';
+          $.each(trades, function (i, t) {
+            rowsHtml += '<tr>' +
+              '<td class="text-center fw-bold text-body-secondary">' + t.index + '</td>' +
+              '<td class="text-center font-monospace">' + t.time + '</td>' +
+              '<td class="text-end font-monospace">' + formatPrice(t.buyPrice) + '</td>' +
+              '<td class="text-end">' + formatMoney(t.investAmount) + '</td>' +
+              '<td class="text-end font-monospace">' + formatShares(t.sharesBought) + '</td>' +
+              '<td class="text-end fw-semibold">' + formatMoney(t.cumInvested) + '</td>' +
+              '<td class="text-end font-monospace">' + formatShares(t.cumShares) + '</td>' +
+              '<td class="text-end font-monospace text-body-secondary">' + formatPrice(t.closePrice) + '</td>' +
+              '<td class="text-end fw-bold text-white">' + formatMoney(t.portfolioValue) + '</td>' +
+              '</tr>';
+          });
+
+          $('#trades-table-tbody').html(rowsHtml);
+        });
+      }
+
+      // 表單送出事件（1-6 Submit）
+      $('#backtest-form').on('submit', function (e) {
+        e.preventDefault();
+        runBacktest();
+      });
+
+      // 快捷金額按鈕點擊事件（$3千、$5千、$1萬、$3萬、$5萬）
+      $('.quick-amount-btn').on('click', function () {
+        var amount = $(this).data('amount');
+        $('#invest-amount').val(amount);
+        runBacktest();
+      });
+
+      // 當切換投資策略時自動重新計算
+      $('#strategy-select').on('change', function () {
+        runBacktest();
+      });
+
+      // 當修改日期時自動重新計算
+      $('#start-date, #end-date').on('change', function () {
+        runBacktest();
+      });
+
+      // 當切換標的股票時，自動調整起訖日期預設值並執行回測
+      $('#stock-select').on('change', function () {
+        var selectedStock = $(this).val();
+        fetchStockData(selectedStock, function (data) {
+          updateDateInputs(data, true);
+          runBacktest();
+        });
+      });
+
+      // 快速區間按鈕事件（近 1年、3年、5年、10年、全部）
+      $('.quick-date-btn').on('click', function () {
+        var years = $(this).data('years');
+        if (!currentStockRawData || currentStockRawData.length === 0) return;
+
+        var maxDateStr = currentStockRawData[currentStockRawData.length - 1].time;
+        var minDateStr = currentStockRawData[0].time;
+
+        if (years === 'all') {
+          $('#start-date').val(minDateStr);
+          $('#end-date').val(maxDateStr);
+        } else {
+          var maxDate = new Date(maxDateStr);
+          var targetStartDate = new Date(maxDate);
+          targetStartDate.setFullYear(maxDate.getFullYear() - parseInt(years));
+
+          var yyyy = targetStartDate.getFullYear();
+          var mm = String(targetStartDate.getMonth() + 1).padStart(2, '0');
+          var dd = String(targetStartDate.getDate()).padStart(2, '0');
+          var formattedStart = yyyy + '-' + mm + '-' + dd;
+
+          if (formattedStart < minDateStr) formattedStart = minDateStr;
+
+          $('#start-date').val(formattedStart);
+          $('#end-date').val(maxDateStr);
+        }
+        runBacktest();
+      });
+
+      // 頁面初次載入預設執行
+      var defaultStock = $('#stock-select').val();
+      fetchStockData(defaultStock, function (data) {
+        updateDateInputs(data, true);
+        runBacktest();
+      });
+    });
+  </script>
+</body>
+
+</html>

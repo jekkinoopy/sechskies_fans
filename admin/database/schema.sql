@@ -71,6 +71,39 @@ INSERT INTO dance_practice_items
 SELECT 'Road Fighter', 'Dance,Rap,Performance', '節奏、力量、舞台感', 'hard', 'not_started', '未來擴充', 0, 30, 'coming_soon'
 WHERE NOT EXISTS (SELECT 1 FROM dance_practice_items WHERE title = 'Road Fighter');
 
+CREATE TABLE IF NOT EXISTS fan_roster (
+    id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    nickname VARCHAR(80) NOT NULL,
+    join_time VARCHAR(80) NOT NULL,
+    fan_items VARCHAR(255) NULL,
+    story TEXT NOT NULL,
+    sort_order INT NOT NULL DEFAULT 0,
+    status ENUM('draft','coming_soon','published','archived') NOT NULL DEFAULT 'draft',
+    created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    INDEX idx_fan_roster_order (status, sort_order, id)
+) ENGINE=InnoDB;
+
+INSERT INTO fan_roster
+    (nickname, join_time, fan_items, story, sort_order, status)
+SELECT '黃色氣球', '20TH（2016）', '手燈,初回版專輯,演唱會團服', '20 週年台灣小黃串燒聯舞發起人之一，整理了歷屆演唱會的應援口號小抄。', 10, 'published'
+WHERE NOT EXISTS (SELECT 1 FROM fan_roster WHERE nickname = '黃色氣球');
+
+INSERT INTO fan_roster
+    (nickname, join_time, fan_items, story, sort_order, status)
+SELECT '水晶老粉_TW', '出道即入坑（1997）', '初代應援手燈,簽名小卡收藏', '保存至今最完整的台灣官方應援物收藏之一，多次借出給粉絲活動展示。', 20, 'published'
+WHERE NOT EXISTS (SELECT 1 FROM fan_roster WHERE nickname = '水晶老粉_TW');
+
+INSERT INTO fan_roster
+    (nickname, join_time, fan_items, story, sort_order, status)
+SELECT '熱舞應援組長', '2018', '應援毛巾,螢光棒', '水晶熱舞社翻跳影片主要剪輯與應援手勢教學負責人。', 30, 'published'
+WHERE NOT EXISTS (SELECT 1 FROM fan_roster WHERE nickname = '熱舞應援組長');
+
+INSERT INTO fan_roster
+    (nickname, join_time, fan_items, story, sort_order, status)
+SELECT '初心水晶迷', '2023', '手燈,周邊吊飾', '30TH 應援企劃的新加入夥伴，正在製作第一份手工應援看板。', 40, 'draft'
+WHERE NOT EXISTS (SELECT 1 FROM fan_roster WHERE nickname = '初心水晶迷');
+
 CREATE TABLE IF NOT EXISTS audit_logs (
     id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
     admin_user_id INT UNSIGNED NULL,

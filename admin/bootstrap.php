@@ -87,6 +87,18 @@ function modules(): array
             ],
             'list' => ['title', 'difficulty', 'progress_status', 'is_featured', 'sort_order', 'status', 'updated_at'],
         ],
+        'fan_roster' => [
+            'label' => '小黃集點卡', 'item_label' => '粉絲資料', 'list_title' => '粉絲名單', 'icon' => 'person-hearts', 'table' => 'fan_roster', 'order' => 'sort_order, id',
+            'fields' => [
+                'nickname' => ['label' => '暱稱', 'type' => 'text', 'required' => true],
+                'join_time' => ['label' => '入坑時間', 'type' => 'text', 'required' => true],
+                'fan_items' => ['label' => '應援物', 'type' => 'text'],
+                'story' => ['label' => '應援事蹟', 'type' => 'textarea', 'required' => true],
+                'sort_order' => ['label' => '排序', 'type' => 'number', 'default' => '0'],
+                'status' => ['label' => '公開狀態', 'type' => 'status', 'required' => true],
+            ],
+            'list' => ['nickname', 'join_time', 'fan_items', 'sort_order', 'status', 'updated_at'],
+        ],
     ];
 }
 
@@ -177,13 +189,13 @@ function render_header(string $title, string $active = ''): void
         <span>sechskies_fans</span>
         <small>Admin</small>
     </a>
-    <div class="admin-topbar__actions"><span><?= h($_SESSION['admin_name'] ?? '') ?></span><a href="../jekki-dance.html" target="_blank" rel="noopener">查看前臺</a><a href="logout.php">登出</a></div>
+    <div class="admin-topbar__actions"><span><?= h($_SESSION['admin_name'] ?? '') ?></span><a href="../practice-room.html" target="_blank" rel="noopener">查看前臺</a><a href="logout.php">登出</a></div>
 </header>
 <div class="admin-shell">
     <aside class="admin-sidebar" id="admin-sidebar">
         <nav aria-label="後臺管理選單">
             <a class="<?= $active === 'dashboard' ? 'active' : '' ?>" href="index.php"><i class="bi bi-speedometer2"></i>控制台</a>
-            <p>水晶熱舞社</p>
+            <p>內容管理</p>
             <?php foreach ($mods as $key => $mod): ?>
                 <a class="<?= $active === $key ? 'active' : '' ?>" href="records.php?module=<?= h($key) ?>"><i class="bi bi-<?= h($mod['icon']) ?>"></i><?= h($mod['label']) ?></a>
             <?php endforeach; ?>
