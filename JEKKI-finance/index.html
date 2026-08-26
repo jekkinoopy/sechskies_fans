@@ -467,6 +467,12 @@
               showError('檔案格式錯誤或查無數據（' + jsonUrl + '）');
               return;
             }
+            // 只取水晶回歸（2016年）之後的資料
+            data = data.filter(function (item) { return item.time >= '2016-01-01'; });
+            if (data.length === 0) {
+              showError('2016 年後查無數據（' + jsonUrl + '）');
+              return;
+            }
             stockDataCache[stock] = data;
             currentStockRawData = data;
             if (callback) callback(data);

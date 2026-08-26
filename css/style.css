@@ -319,6 +319,8 @@ body::after {
 /* ============ 表格 ============ */
 .sk-surface .table {
   --bs-table-color: var(--sk-text);
+  --bs-table-striped-color: var(--sk-text);
+  --bs-table-hover-color: var(--sk-text);
   --bs-table-bg: transparent;
   --bs-table-striped-bg: rgba(180, 184, 191, 0.06);
   --bs-table-hover-bg: rgba(180, 184, 191, 0.1);
@@ -326,8 +328,9 @@ body::after {
   vertical-align: middle;
 }
 
-.sk-surface .table thead {
-  background-color: var(--sk-surface-soft);
+.sk-surface .table thead th {
+  --bs-table-bg: #1c1d1f;
+  background-color: #1c1d1f;
   color: #fff;
 }
 
