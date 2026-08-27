@@ -43,11 +43,13 @@
             color: #fff;
         }
 
-        /* 頁首橫幅：維持滿版寬度，高度依圖片原比例縮放，不裁切文字 */
+        /* 頁首橫幅：滿版寬度，依 21:9 裁切置中，裁掉的範圍交給瀏覽器算（同全站 .hero-banner 手法） */
         .dance-page-banner {
             display: block;
             width: 100%;
-            height: auto;
+            aspect-ratio: 21 / 9;
+            object-fit: cover;
+            object-position: center;
         }
 
         /* 頁首 */
@@ -785,6 +787,7 @@
         <div class="container">
             <a class="navbar-brand" href="jekki-dance.html"><i class="bi bi-gem me-1"></i>小黃同樂會 － YELLOW WAVE</a>
             <div class="d-flex gap-2">
+                <a class="btn btn-outline-brand btn-sm" href="jekki-shorts.html">短影音精選</a>
                 <a class="btn btn-outline-brand btn-sm" href="practice-room.html">水晶練習室</a>
                 <a class="btn btn-outline-brand btn-sm" href="admin/login.php">後台管理</a>
             </div>
@@ -825,17 +828,6 @@
 
             <div class="video-grid">
                 <h2 class="section-title">從 20TH 到 30TH</h2>
-                <div class="video-feature">
-                    <div class="ratio ratio-16x9">
-                        <iframe src="https://www.youtube.com/embed/fkJmOMPirBc" title="20TH 正式影片：SECHSKIES 20週年紀念串燒舞蹈"
-                            allowfullscreen></iframe>
-                    </div>
-                    <div class="section-body">
-                        <p>水晶熱舞社是<span class="mark_b mark_y">水晶男孩推廣部</span>底下的舞蹈應援企劃，從 20TH 台灣小黃串燒聯舞的集體記憶出發，整理 SECHSKIES
-                            經典舞台、翻跳紀錄與應援行動，並<span class="fan-journey-wave">預備在 2027/04/15 30TH
-                                前</span>募集新的參與者，由歷屆台灣小黃接力延續。</p>
-                    </div>
-                </div>
 
                 <h3 class="sub-section-title">延伸閱讀</h3>
                 <div class="row g-4">
@@ -864,6 +856,15 @@
                                     allowfullscreen></iframe>
                             </div>
                             <span class="video-label">幕後花絮 #2・雨中共舞</span>
+                        </div>
+                    </div>
+                    <div class="col-12 col-sm-6 col-lg-4">
+                        <div class="video-thumb">
+                            <div class="ratio ratio-16x9">
+                                <iframe src="https://www.youtube.com/embed/L07xiMQbWRQ" title="韓國粉絲剪輯版"
+                                    allowfullscreen></iframe>
+                            </div>
+                            <span class="video-label">韓國粉絲剪輯版</span>
                         </div>
                     </div>
                 </div>
