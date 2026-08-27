@@ -33,7 +33,7 @@ try {
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>sechskies_fans｜小黃集點卡</title>
+  <title>YELLOW WAVE｜小黃集點卡</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
   <link rel="stylesheet" href="../css/style.css">
@@ -44,7 +44,7 @@ try {
   <!-- 共用導覽列 -->
   <nav class="navbar navbar-expand-lg navbar-dark sk-navbar sticky-top">
     <div class="container">
-      <a class="navbar-brand" href="../practice-room.html"><i class="bi bi-gem me-1"></i>小黃同樂會 －YELLOWKIES FESTIVAL</a>
+      <a class="navbar-brand" href="../practice-room.html"><i class="bi bi-gem me-1"></i>小黃同樂會 － YELLOW WAVE</a>
       <div class="d-flex gap-2">
         <a class="btn btn-outline-brand btn-sm" href="../practice-room.html">水晶練習室</a>
         <a class="btn btn-brand btn-sm" href="../admin/records.php?module=fan_roster">後台管理</a>

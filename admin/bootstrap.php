@@ -185,8 +185,8 @@ function render_header(string $title, string $active = ''): void
 </head>
 <body>
 <header class="admin-topbar">
-    <a class="admin-brand" href="index.php" aria-label="sechskies_fans 後台首頁">
-        <span>sechskies_fans</span>
+    <a class="admin-brand" href="index.php" aria-label="YELLOW WAVE 後台首頁">
+        <span>YELLOW WAVE</span>
         <small>Admin</small>
     </a>
     <div class="admin-topbar__actions"><span><?= h($_SESSION['admin_name'] ?? '') ?></span><a href="../practice-room.html" target="_blank" rel="noopener">查看前臺</a><a href="logout.php">登出</a></div>

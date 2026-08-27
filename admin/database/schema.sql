@@ -1,5 +1,5 @@
-CREATE DATABASE IF NOT EXISTS sechskies_fans CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
-USE sechskies_fans;
+CREATE DATABASE IF NOT EXISTS yellowkies CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+USE yellowkies;
 SET NAMES utf8mb4;
 
 CREATE TABLE IF NOT EXISTS admin_users (
