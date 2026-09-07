@@ -245,6 +245,10 @@ function shortTime(string $t): string
 
     <main class="container py-5">
 
+        <div class="text-center mb-4">
+            <img src="bn.jpg" alt="水晶氣象局 banner" class="img-fluid rounded-4 shadow-sm">
+        </div>
+
         <div class="text-center mb-5">
             <span class="eyebrow mb-3">小黃同樂會・SECHSKIES DANCE WEATHER</span>
             <h1 class="display-5 fw-bold text-white mt-3 mb-0">水晶氣象局</h1>
